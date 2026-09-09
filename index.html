@@ -155,7 +155,7 @@ header.scrolled .nav-glass{
   text-align:center;
   padding:160px 32px 100px;
 }
-.hero-copy{position:relative;display:flex;flex-direction:column;align-items:center;max-width:1040px;}
+.hero-copy{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;max-width:1040px;}
 .eyebrow{
   display:inline-flex;align-items:center;gap:10px;
   font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);
@@ -174,7 +174,7 @@ header.scrolled .nav-glass{
   opacity:0;transform:translateY(24px);
   animation:reveal 1s var(--ease) .22s forwards;
 }
-.hero h1 em, .final-cta-card h2 em{
+.hero h1 em{
   font-style:normal;
   color:var(--ink-dim);
   white-space:nowrap;
@@ -197,9 +197,9 @@ header.scrolled .nav-glass{
 .hero-globe-stage{
   position:relative;
   width:100%;
-  max-width:760px;
-  height:440px;
-  margin:48px auto 0;
+  max-width:1200px;
+  height:750px;
+  margin:-160px auto 0;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -207,16 +207,17 @@ header.scrolled .nav-glass{
   opacity:0;
   transform:translateY(30px);
   animation:reveal 1.2s var(--ease) .5s forwards;
+  z-index:1;
 }
 .globe-container{
   position:relative;
   width:100%;
   height:100%;
-  border-radius:var(--radius-l);
-  overflow:hidden;
-  border:1px solid var(--line-strong);
-  background:radial-gradient(ellipse at 50% 50%, rgba(15,30,55,.45), rgba(5,5,5,.9) 75%);
-  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 40px 80px -25px rgba(0,0,0,.9);
+  border-radius:0;
+  overflow:visible;
+  border:none;
+  background:transparent;
+  box-shadow:none;
   cursor:grab;
 }
 .globe-container:active{cursor:grabbing;}
@@ -226,41 +227,15 @@ header.scrolled .nav-glass{
   height:100% !important;
   outline:none;
 }
-.globe-info-card{
-  position:absolute;
-  bottom:24px;
-  left:24px;
-  padding:14px 22px;
-  border-radius:16px;
-  background:rgba(10,10,10,.65);
-  border:1px solid var(--line-strong);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  z-index:10;
-  box-shadow:0 10px 30px rgba(0,0,0,.6);
-  pointer-events:none;
-  text-align:left;
-}
-.globe-info-card h3{
-  font-family:var(--serif);
-  font-size:15px;
-  font-weight:400;
-  color:#fff;
-  margin-bottom:2px;
-}
-.globe-info-card p{
-  font-size:12px;
-  color:var(--ink-dim);
-}
 .globe-marker-badge{
   position:absolute;
   transform:translate(-50%, -100%);
   padding:5px 12px;
   border-radius:100px;
-  background:rgba(8,12,22,.85);
-  border:1px solid rgba(255,255,255,.2);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+  background:rgba(12,12,12,.85);
+  border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
   color:#fff;
   font-size:11px;
   letter-spacing:.03em;
@@ -269,7 +244,7 @@ header.scrolled .nav-glass{
   opacity:0;
   transition:opacity .3s ease, transform .3s ease;
   z-index:5;
-  box-shadow:0 6px 16px rgba(0,0,0,.6);
+  box-shadow:0 6px 20px rgba(0,0,0,.7);
   display:flex;
   align-items:center;
   gap:7px;
@@ -288,14 +263,11 @@ header.scrolled .nav-glass{
   width:6px;
   height:6px;
   border-radius:50%;
-  background:#4da6ff;
-  box-shadow:0 0 8px #4da6ff;
+  background:#ffffff;
+  box-shadow:0 0 8px rgba(255,255,255,.8);
 }
 @media (max-width:600px){
-  .hero-globe-stage{height:340px;margin-top:36px;}
-  .globe-info-card{bottom:14px;left:14px;padding:10px 14px;}
-  .globe-info-card h3{font-size:13px;}
-  .globe-info-card p{font-size:11px;}
+  .hero-globe-stage{height:480px;margin-top:-90px;}
 }
 @keyframes reveal{to{opacity:1;transform:none;}}
 
@@ -589,19 +561,27 @@ section{position:relative;z-index:2;padding:90px 64px;}
 }
 .map-legend b{color:#fff;font-family:var(--serif);font-size:15px;display:block;font-weight:400;}
 
-/* ---------- 08 ПОДАТЬ ЗАЯВКУ (Form) ---------- */
-.apply-section{
-  max-width:800px;margin:0 auto;
-}
-.apply-card{
-  background:rgba(255,255,255,.025);
+/* ---------- 08 ПОДАТЬ ЗАЯВКУ (Section & Modal) ---------- */
+.apply-cta-card{
+  background:radial-gradient(100% 100% at 50% 0%, rgba(255,255,255,.08), transparent 80%), #080808;
   border:1px solid var(--line-strong);
   border-radius:var(--radius-l);
-  padding:48px 44px;
-  backdrop-filter:blur(20px);
-  box-shadow:0 1px 0 rgba(255,255,255,.1) inset, 0 40px 80px -30px rgba(0,0,0,.8);
+  padding:64px 48px;
+  text-align:center;
+  max-width:960px;
+  margin:0 auto;
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 30px 60px -20px rgba(0,0,0,.7);
 }
-.apply-form{display:flex;flex-direction:column;gap:24px;}
+.apply-cta-card h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2rem,3.4vw,3.2rem);
+  margin-bottom:16px;
+}
+.apply-cta-card p{
+  color:var(--ink-dim);font-size:1.05rem;max-width:560px;margin:0 auto 32px;
+}
+
+.apply-form{display:flex;flex-direction:column;gap:20px;}
 .form-group{display:flex;flex-direction:column;gap:8px;}
 .form-label{font-size:13px;font-weight:500;color:var(--ink);letter-spacing:.01em;}
 .form-label span{color:var(--ink-dim);font-weight:400;font-size:12px;margin-left:6px;}
@@ -622,7 +602,7 @@ section{position:relative;z-index:2;padding:90px 64px;}
   background:rgba(255,255,255,.07);
   box-shadow:0 0 0 3px rgba(255,255,255,.08);
 }
-.form-textarea{min-height:100px;resize:vertical;}
+.form-textarea{min-height:90px;resize:vertical;}
 
 .role-options{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
 .role-chip{
@@ -649,24 +629,66 @@ section{position:relative;z-index:2;padding:90px 64px;}
   width:100%;margin-top:12px;padding:16px 32px;font-size:15px;
 }
 
-/* Modal feedback */
+/* Modal Popup */
 .modal-overlay{
   position:fixed;inset:0;z-index:999;
-  background:rgba(5,5,5,.75);backdrop-filter:blur(20px);
+  background:rgba(5,5,5,.82);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
   display:flex;align-items:center;justify-content:center;
   padding:20px;
   opacity:0;pointer-events:none;transition:opacity .4s var(--ease);
 }
 .modal-overlay.active{opacity:1;pointer-events:auto;}
-.modal-card{
-  background:#0a0a0a;border:1px solid var(--line-strong);
-  border-radius:var(--radius-l);padding:44px;max-width:480px;text-align:center;
-  box-shadow:0 30px 60px rgba(0,0,0,.8);
-  transform:scale(.95);transition:transform .4s var(--ease);
+.apply-modal-card{
+  position:relative;
+  background:#0a0a0a;
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-l);
+  padding:44px 40px;
+  max-width:740px;
+  width:100%;
+  max-height:90vh;
+  overflow-y:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.9);
+  transform:scale(.94);
+  transition:transform .4s var(--ease);
+  text-align:left;
+  scrollbar-width:thin;
 }
-.modal-overlay.active .modal-card{transform:scale(1);}
-.modal-card h3{font-family:var(--serif);font-size:1.8rem;font-weight:400;margin-bottom:12px;}
-.modal-card p{color:var(--ink-dim);font-size:.98rem;margin-bottom:28px;}
+.modal-overlay.active .apply-modal-card{transform:scale(1);}
+.modal-close-btn{
+  position:absolute;
+  top:22px;right:24px;
+  width:36px;height:36px;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:var(--ink-dim);
+  font-size:22px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s var(--ease);
+  cursor:pointer;
+  line-height:1;
+}
+.modal-close-btn:hover{
+  background:rgba(255,255,255,.15);
+  color:#fff;
+}
+.modal-head{
+  margin-bottom:28px;
+  text-align:center;
+}
+.modal-head h3{
+  font-family:var(--serif);
+  font-size:1.8rem;
+  font-weight:400;
+  margin-bottom:6px;
+}
+.modal-head p{
+  color:var(--ink-dim);
+  font-size:.95rem;
+}
 
 /* ---------- 09 FAQ ---------- */
 .faq-list{max-width:840px;margin:0 auto;}
@@ -681,26 +703,7 @@ section{position:relative;z-index:2;padding:90px 64px;}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease);}
 .faq-a p{padding-bottom:26px;color:var(--ink-dim);font-size:.96rem;line-height:1.6;max-width:760px;}
 
-/* ---------- 10 ФИНАЛЬНЫЙ CTA ---------- */
-.final-cta-card{
-  background:radial-gradient(100% 100% at 50% 0%, rgba(255,255,255,.08), transparent 80%), #080808;
-  border:1px solid var(--line-strong);
-  border-radius:var(--radius-l);
-  padding:72px 48px;
-  text-align:center;
-  max-width:960px;
-  margin:0 auto;
-  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 40px 80px -30px rgba(0,0,0,.8);
-}
-.final-cta-card h2{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(2.2rem,4vw,3.6rem);
-  line-height:1.15;
-  margin-bottom:20px;
-}
-.final-cta-card p{
-  color:var(--ink-dim);font-size:1.1rem;max-width:560px;margin:0 auto 36px;
-}
+
 
 /* ---------- 11 FOOTER ---------- */
 footer{
@@ -736,7 +739,6 @@ footer{
   .footer-cols{grid-template-columns:1fr;}
   section{padding:56px 20px;}
   .apply-card{padding:32px 20px;}
-  .final-cta-card{padding:48px 24px;}
   .about-banner{padding:44px 24px;}
 }
 
@@ -820,7 +822,7 @@ body.gate-active{overflow:hidden;}
       <a href="#faq" data-i18n="nav_faq">FAQ</a>
     </nav>
     <div class="nav-actions">
-      <a href="#apply" class="btn btn-primary btn-sm" data-i18n="cta_apply">Подать заявку</a>
+      <a href="#apply" onclick="openApplyModal(event)" class="btn btn-primary btn-sm" data-i18n="cta_apply">Подать заявку</a>
     </div>
   </div>
 </header>
@@ -832,17 +834,13 @@ body.gate-active{overflow:hidden;}
     <h1 data-i18n-html="hero_title">Найти человека легко.<br><em>Найти нужного — сложно.</em></h1>
     <p data-i18n="hero_sub">Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.</p>
     <div class="hero-actions">
-      <a href="#apply" class="btn btn-primary btn-pulse" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
+      <a href="#apply" onclick="openApplyModal(event)" class="btn btn-primary btn-pulse" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
     </div>
   </div>
 
   <!-- 3D Globe Stage -->
   <div class="hero-globe-stage">
     <div id="globe3dContainer" class="globe-container"></div>
-    <div class="globe-info-card">
-      <h3 data-i18n="globe_card_title">Резиденты по всему миру</h3>
-      <p data-i18n="globe_card_sub">13 ключевых хабов сети STATUS на 6 континентах.</p>
-    </div>
   </div>
 </section>
 
@@ -1179,106 +1177,98 @@ body.gate-active{overflow:hidden;}
     </div>
   </div>
 
-  <!-- Event Map Panel -->
-  <div class="map-panel reveal">
-    <video class="map-bg-video" src="map-video.mp4" autoplay muted loop playsinline></video>
-    <div class="map-video-overlay"></div>
-    <div class="grid-lines"></div>
-    <div class="city-pin" style="top:30%;left:18%;"></div>
-    <div class="city-pin" style="top:55%;left:42%;animation-delay:1s;"></div>
-    <div class="city-pin" style="top:38%;left:66%;animation-delay:2s;"></div>
-    <div class="city-pin" style="top:64%;left:80%;animation-delay:.5s;"></div>
-    <div class="map-legend">
-      <b>Нью-Йорк, Дубай, Сингапур</b>
-      <span>Резиденты STATUS встречаются по всему миру</span>
-    </div>
-  </div>
 </section>
 
 <!-- 08 ПОДАТЬ ЗАЯВКУ -->
 <section id="apply">
-  <div class="section-head reveal center">
+  <div class="apply-cta-card reveal">
     <span class="section-tag" data-i18n="tag_08">08 — ПОДАТЬ ЗАЯВКУ</span>
     <h2 data-i18n="apply_h2">Присоединяйтесь к STATUS</h2>
     <p data-i18n="apply_p">Заполните анкету для рассмотрения вашей кандидатуры в закрытую сеть.</p>
-  </div>
-
-  <div class="apply-section reveal">
-    <div class="apply-card">
-      <form class="apply-form" id="applicationForm" onsubmit="handleFormSubmit(event)">
-        
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_name">Имя и фамилия *</label>
-          <input type="text" class="form-input" required placeholder="Иван Иванов" id="fieldName">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_role">Ваша профессиональная роль *</label>
-          <div class="role-options">
-            <label class="role-chip">
-              <input type="radio" name="user_role" value="Владелец бизнеса" checked>
-              <span class="role-chip-text" data-i18n="role_opt1">Владелец бизнеса</span>
-            </label>
-            <label class="role-chip">
-              <input type="radio" name="user_role" value="Основатель стартапа">
-              <span class="role-chip-text" data-i18n="role_opt2">Основатель стартапа</span>
-            </label>
-            <label class="role-chip">
-              <input type="radio" name="user_role" value="Руководитель">
-              <span class="role-chip-text" data-i18n="role_opt3">Руководитель</span>
-            </label>
-            <label class="role-chip">
-              <input type="radio" name="user_role" value="Эксперт или специалист">
-              <span class="role-chip-text" data-i18n="role_opt4">Эксперт или специалист</span>
-            </label>
-            <label class="role-chip">
-              <input type="radio" name="user_role" value="Инвестор">
-              <span class="role-chip-text" data-i18n="role_opt5">Инвестор</span>
-            </label>
-            <label class="role-chip">
-              <input type="radio" name="user_role" value="Другое">
-              <span class="role-chip-text" data-i18n="role_opt6">Другое</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_company">Компания / проект <span>(Название, ваша роль, ссылка — если есть)</span></label>
-          <input type="text" class="form-input" placeholder="ООО «Компания», CEO, https://..." id="fieldCompany">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_about">Расскажите о себе * <span>(Коротко о том, чем вы занимаетесь, вашем опыте и экспертизе)</span></label>
-          <textarea class="form-textarea" required placeholder="Ваш опыт, достижения и текущее направление работы..." id="fieldAbout"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_target">С кем вам хотелось бы познакомиться сейчас? * <span>(Текущие задачи и кого было бы интересно найти)</span></label>
-          <textarea class="form-textarea" required placeholder="Сооснователь, инвестор, ключевые партнёры, клиенты..." id="fieldTarget"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_profile">Профессиональный профиль <span>(LinkedIn / сайт / другой профиль)</span></label>
-          <input type="text" class="form-input" placeholder="https://linkedin.com/in/... или сайт" id="fieldProfile">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="lbl_contacts">Контакты * <span>(Telegram / e-mail)</span></label>
-          <input type="text" class="form-input" required placeholder="@username или email@domain.com" id="fieldContacts">
-        </div>
-
-        <button type="submit" class="btn btn-primary form-submit-btn" data-i18n="cta_submit">ПОДАТЬ ЗАЯВКУ</button>
-      </form>
-    </div>
+    <button class="btn btn-primary btn-pulse" onclick="openApplyModal(event)" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</button>
   </div>
 </section>
 
-<!-- Modal Confirmation -->
-<div class="modal-overlay" id="confirmModal">
-  <div class="modal-card">
-    <h3 data-i18n="modal_h3">Заявка принята</h3>
-    <p data-i18n="modal_p">Спасибо! Наша команда свяжется с вами после верификации профиля.</p>
-    <button class="btn btn-primary" onclick="closeModal()" data-i18n="modal_btn">Отлично</button>
+<!-- Application Popup Modal -->
+<div class="modal-overlay" id="applyModal">
+  <div class="apply-modal-card">
+    <button class="modal-close-btn" onclick="closeApplyModal()">&times;</button>
+    <div class="modal-head">
+      <span class="section-tag" style="margin-bottom:8px;" data-i18n="tag_08">08 — ПОДАТЬ ЗАЯВКУ</span>
+      <h3 data-i18n="apply_h2">Присоединяйтесь к STATUS</h3>
+      <p data-i18n="apply_p">Заполните анкету для рассмотрения вашей кандидатуры в закрытую сеть.</p>
+    </div>
+
+    <form class="apply-form" id="applicationForm" onsubmit="handleFormSubmit(event)">
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_name">Имя и фамилия *</label>
+        <input type="text" class="form-input" required placeholder="Иван Иванов" id="fieldName">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_role">Ваша профессиональная роль *</label>
+        <div class="role-options">
+          <label class="role-chip">
+            <input type="radio" name="user_role" value="Владелец бизнеса" checked>
+            <span class="role-chip-text" data-i18n="role_opt1">Владелец бизнеса</span>
+          </label>
+          <label class="role-chip">
+            <input type="radio" name="user_role" value="Основатель стартапа">
+            <span class="role-chip-text" data-i18n="role_opt2">Основатель стартапа</span>
+          </label>
+          <label class="role-chip">
+            <input type="radio" name="user_role" value="Руководитель">
+            <span class="role-chip-text" data-i18n="role_opt3">Руководитель</span>
+          </label>
+          <label class="role-chip">
+            <input type="radio" name="user_role" value="Эксперт или специалист">
+            <span class="role-chip-text" data-i18n="role_opt4">Эксперт или специалист</span>
+          </label>
+          <label class="role-chip">
+            <input type="radio" name="user_role" value="Инвестор">
+            <span class="role-chip-text" data-i18n="role_opt5">Инвестор</span>
+          </label>
+          <label class="role-chip">
+            <input type="radio" name="user_role" value="Другое">
+            <span class="role-chip-text" data-i18n="role_opt6">Другое</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_company">Компания / проект <span>(Название, ваша роль, ссылка — если есть)</span></label>
+        <input type="text" class="form-input" placeholder="ООО «Компания», CEO, https://..." id="fieldCompany">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_about">Расскажите о себе * <span>(Коротко о том, чем вы занимаетесь, вашем опыте и экспертизе)</span></label>
+        <textarea class="form-textarea" required placeholder="Ваш опыт, достижения и текущее направление работы..." id="fieldAbout"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_target">С кем вам хотелось бы познакомиться сейчас? * <span>(Текущие задачи и кого было бы интересно найти)</span></label>
+        <textarea class="form-textarea" required placeholder="Сооснователь, инвестор, ключевые партнёры, клиенты..." id="fieldTarget"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_profile">Профессиональный профиль <span>(LinkedIn / сайт / другой профиль)</span></label>
+        <input type="text" class="form-input" placeholder="https://linkedin.com/in/... или сайт" id="fieldProfile">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="lbl_contacts">Контакты * <span>(Telegram / e-mail)</span></label>
+        <input type="text" class="form-input" required placeholder="@username или email@domain.com" id="fieldContacts">
+      </div>
+
+      <button type="submit" class="btn btn-primary form-submit-btn" data-i18n="cta_submit">ПОДАТЬ ЗАЯВКУ</button>
+    </form>
+
+    <div class="modal-success-state" id="modalSuccess" style="display:none;text-align:center;">
+      <div class="mark" style="width:48px;height:48px;border-radius:50%;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:18px;">✓</div>
+      <h3 data-i18n="modal_h3">Заявка принята</h3>
+      <p data-i18n="modal_p" style="margin-top:12px;margin-bottom:28px;color:var(--ink-dim);">Спасибо! Наша команда свяжется с вами после верификации профиля.</p>
+      <button class="btn btn-primary" onclick="closeApplyModal()" data-i18n="modal_btn">Отлично</button>
+    </div>
   </div>
 </div>
 
@@ -1333,15 +1323,7 @@ body.gate-active{overflow:hidden;}
   </div>
 </section>
 
-<!-- 10 ФИНАЛЬНЫЙ CTA -->
-<section id="final-cta">
-  <div class="final-cta-card reveal">
-    <span class="section-tag" data-i18n="tag_10">10 — ФИНАЛЬНЫЙ CTA</span>
-    <h2 data-i18n-html="final_h2">Найти человека легко.<br><em>Найти нужного — сложно.</em></h2>
-    <p data-i18n="final_p">Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.</p>
-    <a href="#apply" class="btn btn-primary" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
-  </div>
-</section>
+
 
 <!-- 11 FOOTER -->
 <footer>
@@ -1349,7 +1331,7 @@ body.gate-active{overflow:hidden;}
     <div class="footer-cta">
       <h2 data-i18n="footer_title">STATUS — Закрытая профессиональная сеть</h2>
     </div>
-    <a href="#apply" class="btn btn-primary" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
+    <a href="#apply" onclick="openApplyModal(event)" class="btn btn-primary" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
   </div>
   <div class="footer-cols">
     <div class="footer-col">
@@ -1543,18 +1525,41 @@ function animateGrain(){
 }
 animateGrain();
 
-// Application Form Logic
-function handleFormSubmit(e) {
-  e.preventDefault();
-  const modal = document.getElementById('confirmModal');
+// Application Form & Modal Logic
+function openApplyModal(e) {
+  if (e) e.preventDefault();
+  const modal = document.getElementById('applyModal');
+  const form = document.getElementById('applicationForm');
+  const success = document.getElementById('modalSuccess');
+  if (form) form.style.display = 'flex';
+  if (success) success.style.display = 'none';
   if (modal) modal.classList.add('active');
-  document.getElementById('applicationForm').reset();
+  document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  const modal = document.getElementById('confirmModal');
+function closeApplyModal() {
+  const modal = document.getElementById('applyModal');
   if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
 }
+
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('applicationForm');
+  const success = document.getElementById('modalSuccess');
+  if (form) form.style.display = 'none';
+  if (success) success.style.display = 'block';
+  if (form) form.reset();
+}
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeApplyModal();
+});
+
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById('applyModal');
+  if (e.target === modal) closeApplyModal();
+});
 
 // Bilingual i18n Dictionary
 const i18n = {
@@ -1677,15 +1682,6 @@ const i18n = {
   "faq9_a": { "ru": "После заполнения формы вы получите подтверждение на указанные контакты. Модераторы проверят данные и вышлют персональный ключ доступа.", "en": "You will receive a confirmation on your submitted contact details. Following verification, an invite key will be issued." },
   "faq10_q": { "ru": "Сколько стоит участие в STATUS?", "en": "How much does STATUS membership cost?" },
   "faq10_a": { "ru": "Стоимость и форматы членства высылаются персонально после прохождения первой фазы верификации анкеты.", "en": "Pricing and membership tiers are provided individually following the initial application verification phase." },
-  "tag_10": { "ru": "10 — ФИНАЛЬНЫЙ CTA", "en": "10 — FINAL CTA" },
-  "final_h2": {
-    "ru": "Найти человека легко.<br><em>Найти нужного — сложно.</em>",
-    "en": "Finding anyone is easy.<br><em>Finding the right one is hard.</em>"
-  },
-  "final_p": {
-    "ru": "Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.",
-    "en": "Tell us who you are and who you're looking for. STATUS finds the exact match you need to connect with."
-  },
   "globe_card_title": {
     "ru": "Резиденты по всему миру",
     "en": "Residents All Over The World"
@@ -1752,7 +1748,7 @@ if (urlLang) {
   });
 }
 
-// 3D Globe Implementation (Aceternity UI style)
+// 3D Globe Implementation (Grey / Borderless Aceternity UI style)
 const globeMarkers = [
   { lat: 40.7128, lng: -74.006, src: "https://assets.aceternity.com/avatars/1.webp", label: "New York" },
   { lat: 51.5074, lng: -0.1278, src: "https://assets.aceternity.com/avatars/2.webp", label: "London" },
@@ -1760,7 +1756,6 @@ const globeMarkers = [
   { lat: -33.8688, lng: 151.2093, src: "https://assets.aceternity.com/avatars/4.webp", label: "Sydney" },
   { lat: 48.8566, lng: 2.3522, src: "https://assets.aceternity.com/avatars/5.webp", label: "Paris" },
   { lat: 28.6139, lng: 77.209, src: "https://assets.aceternity.com/avatars/6.webp", label: "New Delhi" },
-  { lat: 55.7558, lng: 37.6173, src: "https://assets.aceternity.com/avatars/7.webp", label: "Moscow" },
   { lat: -22.9068, lng: -43.1729, src: "https://assets.aceternity.com/avatars/8.webp", label: "Rio de Janeiro" },
   { lat: 31.2304, lng: 121.4737, src: "https://assets.aceternity.com/avatars/9.webp", label: "Shanghai" },
   { lat: 25.2048, lng: 55.2708, src: "https://assets.aceternity.com/avatars/10.webp", label: "Dubai" },
@@ -1773,12 +1768,12 @@ function init3DGlobe() {
   const container = document.getElementById('globe3dContainer');
   if (!container || typeof THREE === 'undefined') return;
 
-  const width = container.clientWidth || 600;
-  const height = container.clientHeight || 440;
+  const width = container.clientWidth || 800;
+  const height = container.clientHeight || 650;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-  camera.position.z = 6.2;
+  camera.position.z = 6.8;
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(width, height);
@@ -1788,28 +1783,26 @@ function init3DGlobe() {
   const globeGroup = new THREE.Group();
   scene.add(globeGroup);
 
-  const radius = 2.15;
+  const radius = 2.5;
 
-  const globeGeo = new THREE.SphereGeometry(radius, 64, 64);
+  const globeGeo = new THREE.SphereGeometry(radius * 0.998, 64, 64);
   const globeMat = new THREE.MeshBasicMaterial({
-    color: 0x060c18,
-    transparent: true,
-    opacity: 0.88
+    colorWrite: false
   });
   const globeMesh = new THREE.Mesh(globeGeo, globeMat);
   globeGroup.add(globeMesh);
 
   const wireGeo = new THREE.SphereGeometry(radius * 1.002, 36, 24);
   const wireMat = new THREE.MeshBasicMaterial({
-    color: 0x204060,
+    color: 0x333333,
     wireframe: true,
     transparent: true,
-    opacity: 0.25
+    opacity: 0.2
   });
   const wireMesh = new THREE.Mesh(wireGeo, wireMat);
   globeGroup.add(wireMesh);
 
-  const dotsCount = 1800;
+  const dotsCount = 2000;
   const dotsGeo = new THREE.BufferGeometry();
   const dotsPos = new Float32Array(dotsCount * 3);
   for (let i = 0; i < dotsCount; i++) {
@@ -1822,15 +1815,15 @@ function init3DGlobe() {
   }
   dotsGeo.setAttribute('position', new THREE.BufferAttribute(dotsPos, 3));
   const dotsMat = new THREE.PointsMaterial({
-    color: 0x4da6ff,
-    size: 0.024,
+    color: 0xd0d0d0,
+    size: 0.026,
     transparent: true,
-    opacity: 0.5
+    opacity: 0.55
   });
   const dotsPoints = new THREE.Points(dotsGeo, dotsMat);
   globeGroup.add(dotsPoints);
 
-  const atmosGeo = new THREE.SphereGeometry(radius * 1.15, 64, 64);
+  const atmosGeo = new THREE.SphereGeometry(radius * 1.10, 64, 64);
   const atmosMat = new THREE.ShaderMaterial({
     vertexShader: `
       varying vec3 vNormal;
@@ -1842,8 +1835,8 @@ function init3DGlobe() {
     fragmentShader: `
       varying vec3 vNormal;
       void main() {
-        float intensity = pow(0.62 - dot(vNormal, vec3(0, 0, 1.0)), 2.6);
-        gl_FragColor = vec4(0.3, 0.65, 1.0, 1.0) * intensity;
+        float intensity = pow(0.60 - dot(vNormal, vec3(0, 0, 1.0)), 2.6);
+        gl_FragColor = vec4(0.75, 0.75, 0.8, 1.0) * intensity;
       }
     `,
     blending: THREE.AdditiveBlending,
@@ -1864,7 +1857,7 @@ function init3DGlobe() {
 
   const markerDataList = [];
   const markerGeo = new THREE.SphereGeometry(0.045, 16, 16);
-  const markerMat = new THREE.MeshBasicMaterial({ color: 0x4da6ff });
+  const markerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
   globeMarkers.forEach((m) => {
     const pos = latLngToVector3(m.lat, m.lng, radius * 1.01);
@@ -1973,4 +1966,3 @@ if (document.readyState === 'complete') {
 </script>
 </body>
 </html>
- 
