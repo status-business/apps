@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
   --bg:#050505;
@@ -192,6 +193,109 @@ header.scrolled .nav-glass{
   justify-content:center;flex-wrap:wrap;
   opacity:0;transform:translateY(18px);
   animation:reveal 1s var(--ease) .48s forwards;
+}
+.hero-globe-stage{
+  position:relative;
+  width:100%;
+  max-width:760px;
+  height:440px;
+  margin:48px auto 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transform:translateY(30px);
+  animation:reveal 1.2s var(--ease) .5s forwards;
+}
+.globe-container{
+  position:relative;
+  width:100%;
+  height:100%;
+  border-radius:var(--radius-l);
+  overflow:hidden;
+  border:1px solid var(--line-strong);
+  background:radial-gradient(ellipse at 50% 50%, rgba(15,30,55,.45), rgba(5,5,5,.9) 75%);
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 40px 80px -25px rgba(0,0,0,.9);
+  cursor:grab;
+}
+.globe-container:active{cursor:grabbing;}
+.globe-container canvas{
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  outline:none;
+}
+.globe-info-card{
+  position:absolute;
+  bottom:24px;
+  left:24px;
+  padding:14px 22px;
+  border-radius:16px;
+  background:rgba(10,10,10,.65);
+  border:1px solid var(--line-strong);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  z-index:10;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
+  pointer-events:none;
+  text-align:left;
+}
+.globe-info-card h3{
+  font-family:var(--serif);
+  font-size:15px;
+  font-weight:400;
+  color:#fff;
+  margin-bottom:2px;
+}
+.globe-info-card p{
+  font-size:12px;
+  color:var(--ink-dim);
+}
+.globe-marker-badge{
+  position:absolute;
+  transform:translate(-50%, -100%);
+  padding:5px 12px;
+  border-radius:100px;
+  background:rgba(8,12,22,.85);
+  border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  color:#fff;
+  font-size:11px;
+  letter-spacing:.03em;
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .3s ease, transform .3s ease;
+  z-index:5;
+  box-shadow:0 6px 16px rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.globe-marker-badge.active{
+  opacity:1;
+}
+.globe-marker-avatar{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.4);
+}
+.globe-marker-dot-icon{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#4da6ff;
+  box-shadow:0 0 8px #4da6ff;
+}
+@media (max-width:600px){
+  .hero-globe-stage{height:340px;margin-top:36px;}
+  .globe-info-card{bottom:14px;left:14px;padding:10px 14px;}
+  .globe-info-card h3{font-size:13px;}
+  .globe-info-card p{font-size:11px;}
 }
 @keyframes reveal{to{opacity:1;transform:none;}}
 
@@ -729,6 +833,15 @@ body.gate-active{overflow:hidden;}
     <p data-i18n="hero_sub">Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.</p>
     <div class="hero-actions">
       <a href="#apply" class="btn btn-primary btn-pulse" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
+    </div>
+  </div>
+
+  <!-- 3D Globe Stage -->
+  <div class="hero-globe-stage">
+    <div id="globe3dContainer" class="globe-container"></div>
+    <div class="globe-info-card">
+      <h3 data-i18n="globe_card_title">Резиденты по всему миру</h3>
+      <p data-i18n="globe_card_sub">13 ключевых хабов сети STATUS на 6 континентах.</p>
     </div>
   </div>
 </section>
@@ -1573,6 +1686,14 @@ const i18n = {
     "ru": "Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.",
     "en": "Tell us who you are and who you're looking for. STATUS finds the exact match you need to connect with."
   },
+  "globe_card_title": {
+    "ru": "Резиденты по всему миру",
+    "en": "Residents All Over The World"
+  },
+  "globe_card_sub": {
+    "ru": "13 ключевых хабов сети STATUS на 6 континентах.",
+    "en": "Distributed network of experts across 6 continents."
+  },
   "footer_title": { "ru": "STATUS — Закрытая профессиональная сеть", "en": "STATUS — Private Professional Network" }
 };
 
@@ -1629,6 +1750,225 @@ if (urlLang) {
       document.body.classList.remove('gate-active');
     });
   });
+}
+
+// 3D Globe Implementation (Aceternity UI style)
+const globeMarkers = [
+  { lat: 40.7128, lng: -74.006, src: "https://assets.aceternity.com/avatars/1.webp", label: "New York" },
+  { lat: 51.5074, lng: -0.1278, src: "https://assets.aceternity.com/avatars/2.webp", label: "London" },
+  { lat: 35.6762, lng: 139.6503, src: "https://assets.aceternity.com/avatars/3.webp", label: "Tokyo" },
+  { lat: -33.8688, lng: 151.2093, src: "https://assets.aceternity.com/avatars/4.webp", label: "Sydney" },
+  { lat: 48.8566, lng: 2.3522, src: "https://assets.aceternity.com/avatars/5.webp", label: "Paris" },
+  { lat: 28.6139, lng: 77.209, src: "https://assets.aceternity.com/avatars/6.webp", label: "New Delhi" },
+  { lat: 55.7558, lng: 37.6173, src: "https://assets.aceternity.com/avatars/7.webp", label: "Moscow" },
+  { lat: -22.9068, lng: -43.1729, src: "https://assets.aceternity.com/avatars/8.webp", label: "Rio de Janeiro" },
+  { lat: 31.2304, lng: 121.4737, src: "https://assets.aceternity.com/avatars/9.webp", label: "Shanghai" },
+  { lat: 25.2048, lng: 55.2708, src: "https://assets.aceternity.com/avatars/10.webp", label: "Dubai" },
+  { lat: -34.6037, lng: -58.3816, src: "https://assets.aceternity.com/avatars/11.webp", label: "Buenos Aires" },
+  { lat: 1.3521, lng: 103.8198, src: "https://assets.aceternity.com/avatars/12.webp", label: "Singapore" },
+  { lat: 37.5665, lng: 126.978, src: "https://assets.aceternity.com/avatars/13.webp", label: "Seoul" }
+];
+
+function init3DGlobe() {
+  const container = document.getElementById('globe3dContainer');
+  if (!container || typeof THREE === 'undefined') return;
+
+  const width = container.clientWidth || 600;
+  const height = container.clientHeight || 440;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  camera.position.z = 6.2;
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  const globeGroup = new THREE.Group();
+  scene.add(globeGroup);
+
+  const radius = 2.15;
+
+  const globeGeo = new THREE.SphereGeometry(radius, 64, 64);
+  const globeMat = new THREE.MeshBasicMaterial({
+    color: 0x060c18,
+    transparent: true,
+    opacity: 0.88
+  });
+  const globeMesh = new THREE.Mesh(globeGeo, globeMat);
+  globeGroup.add(globeMesh);
+
+  const wireGeo = new THREE.SphereGeometry(radius * 1.002, 36, 24);
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: 0x204060,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.25
+  });
+  const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+  globeGroup.add(wireMesh);
+
+  const dotsCount = 1800;
+  const dotsGeo = new THREE.BufferGeometry();
+  const dotsPos = new Float32Array(dotsCount * 3);
+  for (let i = 0; i < dotsCount; i++) {
+    const y = 1 - (i / (dotsCount - 1)) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const theta = i * 2.399963229728653;
+    dotsPos[i * 3] = Math.cos(theta) * r * radius;
+    dotsPos[i * 3 + 1] = y * radius;
+    dotsPos[i * 3 + 2] = Math.sin(theta) * r * radius;
+  }
+  dotsGeo.setAttribute('position', new THREE.BufferAttribute(dotsPos, 3));
+  const dotsMat = new THREE.PointsMaterial({
+    color: 0x4da6ff,
+    size: 0.024,
+    transparent: true,
+    opacity: 0.5
+  });
+  const dotsPoints = new THREE.Points(dotsGeo, dotsMat);
+  globeGroup.add(dotsPoints);
+
+  const atmosGeo = new THREE.SphereGeometry(radius * 1.15, 64, 64);
+  const atmosMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vNormal;
+      void main() {
+        float intensity = pow(0.62 - dot(vNormal, vec3(0, 0, 1.0)), 2.6);
+        gl_FragColor = vec4(0.3, 0.65, 1.0, 1.0) * intensity;
+      }
+    `,
+    blending: THREE.AdditiveBlending,
+    side: THREE.BackSide,
+    transparent: true
+  });
+  const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
+  scene.add(atmosMesh);
+
+  function latLngToVector3(lat, lng, r) {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lng + 180) * (Math.PI / 180);
+    const x = -(r * Math.sin(phi) * Math.cos(theta));
+    const z = (r * Math.sin(phi) * Math.sin(theta));
+    const y = (r * Math.cos(phi));
+    return new THREE.Vector3(x, y, z);
+  }
+
+  const markerDataList = [];
+  const markerGeo = new THREE.SphereGeometry(0.045, 16, 16);
+  const markerMat = new THREE.MeshBasicMaterial({ color: 0x4da6ff });
+
+  globeMarkers.forEach((m) => {
+    const pos = latLngToVector3(m.lat, m.lng, radius * 1.01);
+    const mMesh = new THREE.Mesh(markerGeo, markerMat);
+    mMesh.position.copy(pos);
+    globeGroup.add(mMesh);
+
+    const badge = document.createElement('div');
+    badge.className = 'globe-marker-badge';
+    badge.innerHTML = `
+      <img src="${m.src}" class="globe-marker-avatar" alt="${m.label}" onerror="this.style.display='none'">
+      <span class="globe-marker-dot-icon"></span>
+      <span>${m.label}</span>
+    `;
+    container.appendChild(badge);
+
+    markerDataList.push({ pos, mesh: mMesh, badge, label: m.label });
+  });
+
+  let isDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const deltaMove = {
+      x: e.clientX - previousMousePosition.x,
+      y: e.clientY - previousMousePosition.y
+    };
+    globeGroup.rotation.y += deltaMove.x * 0.005;
+    globeGroup.rotation.x += deltaMove.y * 0.005;
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  container.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const deltaMove = {
+      x: e.touches[0].clientX - previousMousePosition.x,
+      y: e.touches[0].clientY - previousMousePosition.y
+    };
+    globeGroup.rotation.y += deltaMove.x * 0.005;
+    globeGroup.rotation.x += deltaMove.y * 0.005;
+    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => { isDragging = false; });
+
+  window.addEventListener('resize', () => {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+
+  const tempV = new THREE.Vector3();
+  function animate() {
+    requestAnimationFrame(animate);
+
+    if (!isDragging) {
+      globeGroup.rotation.y += 0.003;
+    }
+
+    markerDataList.forEach((item) => {
+      tempV.copy(item.pos);
+      tempV.applyMatrix4(globeGroup.matrixWorld);
+
+      const cameraDir = camera.position.clone().sub(tempV).normalize();
+      const normal = tempV.clone().normalize();
+      const dot = normal.dot(cameraDir);
+
+      if (dot > 0.15) {
+        tempV.project(camera);
+        const x = (tempV.x * 0.5 + 0.5) * container.clientWidth;
+        const y = (-(tempV.y * 0.5) + 0.5) * container.clientHeight;
+        item.badge.style.left = `${x}px`;
+        item.badge.style.top = `${y}px`;
+        item.badge.classList.add('active');
+      } else {
+        item.badge.classList.remove('active');
+      }
+    });
+
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+window.addEventListener('load', init3DGlobe);
+if (document.readyState === 'complete') {
+  init3DGlobe();
 }
 </script>
 </body>
