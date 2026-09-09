@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="ru" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">STATUS — Закрытая профессиональная сеть</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;
+  --ink:#ffffff;
+  --ink-dim:#9a9a9a;
+  --line:rgba(255,255,255,.08);
+  --line-strong:rgba(255,255,255,.14);
+  --glass-highlight:rgba(255,255,255,.18);
+  --glass-bg:rgba(255,255,255,.04);
+  --radius-s:10px;
+  --radius-m:18px;
+  --radius-l:28px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --serif:'Google Sans','Roboto','Inter',sans-serif;
+  --sans:'Google Sans','Roboto','Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+  width:100%;
+  overscroll-behavior-x:none;
+}
+::selection{background:#fff;color:#000;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  width:100%;
+  max-width:100vw;
+  position:relative;
+  overscroll-behavior-x:none;
+  touch-action:pan-y;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.5;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{max-width:100%;display:block;}
+
+/* ---------- Ambient background ---------- */
+.grain{
+  position:fixed;inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:.045;
+  mix-blend-mode:overlay;
+}
+.field{
+  position:fixed;inset:0;
+  z-index:0;
+  background:
+    radial-gradient(ellipse 900px 600px at 20% 0%, rgba(255,255,255,.05), transparent 60%),
+    radial-gradient(ellipse 700px 700px at 85% 30%, rgba(255,255,255,.035), transparent 60%);
+}
+.grid-lines{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:120px 120px;
+  mask-image:radial-gradient(ellipse 100% 60% at 50% 0%, black, transparent 75%);
+}
+
+/* ---------- Header ---------- */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  padding:22px 32px;
+  transition:padding .5s var(--ease);
+}
+.nav-glass{
+  width:100%;max-width:1180px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 22px;
+  border-radius:999px;
+  background:rgba(10,10,10,.35);
+  backdrop-filter:blur(20px) saturate(140%);
+  -webkit-backdrop-filter:blur(20px) saturate(140%);
+  border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 20px 40px -20px rgba(0,0,0,.6);
+  transition:background .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+}
+header.scrolled .nav-glass{
+  background:rgba(8,8,8,.55);
+  border-color:var(--line-strong);
+}
+.logo{font-family:var(--serif);font-size:19px;letter-spacing:.02em;font-weight:500;}
+.nav-links{display:flex;gap:28px;font-size:13px;color:var(--ink-dim);}
+.nav-links a{position:relative;transition:color .3s var(--ease);}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--ink);
+  transition:width .35s var(--ease);
+}
+.nav-links a:hover::after{width:100%;}
+.nav-actions{display:flex;align-items:center;gap:18px;}
+.link-btn{font-size:13.5px;color:var(--ink-dim);transition:color .3s var(--ease);}
+.link-btn:hover{color:var(--ink);}
+
+.btn{
+  position:relative;
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;
+  padding:14px 28px;
+  border-radius:999px;
+  font-size:13.5px;font-weight:500;letter-spacing:.01em;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease);
+  white-space:nowrap;
+}
+.btn-primary{
+  background:#fff;color:#050505;
+  box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 12px 24px -10px rgba(255,255,255,.25);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 18px 32px -10px rgba(255,255,255,.35);}
+.btn-pulse{
+  animation:heroPulse 3s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes heroPulse{
+  0%, 100%{
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 12px 24px -10px rgba(255,255,255,.3);
+  }
+  50%{
+    box-shadow:0 1px 0 rgba(255,255,255,.8) inset, 0 20px 48px 6px rgba(255,255,255,.45), 0 0 36px 8px rgba(255,255,255,.28);
+  }
+}
+.btn-ghost{
+  background:var(--glass-bg);
+  border:1px solid var(--line-strong);
+  color:var(--ink);
+  backdrop-filter:blur(14px);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.08);transform:translateY(-2px);}
+.btn-sm{padding:10px 20px;font-size:12.5px;}
+
+/* ---------- Hero (01 ПЕРВЫЙ ЭКРАН) ---------- */
+.hero{
+  position:relative;z-index:2;
+  min-height:90vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:160px 32px 100px;
+}
+.hero-copy{position:relative;display:flex;flex-direction:column;align-items:center;max-width:1040px;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);
+  margin-bottom:28px;
+  opacity:0;transform:translateY(10px);
+  animation:reveal .9s var(--ease) .1s forwards;
+}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.6);}
+.hero h1{
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(2.2rem, 4.6vw, 4.8rem);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  max-width:1000px;
+  opacity:0;transform:translateY(24px);
+  animation:reveal 1s var(--ease) .22s forwards;
+}
+.hero h1 em, .final-cta-card h2 em{
+  font-style:normal;
+  color:var(--ink-dim);
+  white-space:nowrap;
+}
+.hero p{
+  margin-top:28px;
+  font-size:clamp(1.05rem,1.3vw,1.25rem);
+  color:var(--ink-dim);
+  max-width:620px;
+  line-height:1.6;
+  opacity:0;transform:translateY(18px);
+  animation:reveal 1s var(--ease) .36s forwards;
+}
+.hero-actions{
+  display:flex;gap:14px;margin-top:44px;
+  justify-content:center;flex-wrap:wrap;
+  opacity:0;transform:translateY(18px);
+  animation:reveal 1s var(--ease) .48s forwards;
+}
+@keyframes reveal{to{opacity:1;transform:none;}}
+
+/* ---------- Sections generic ---------- */
+section{position:relative;z-index:2;padding:90px 64px;}
+.section-head{max-width:760px;margin-bottom:48px;}
+.section-tag{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:20px;display:block;}
+.section-head h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2rem,3.4vw,3.2rem);
+  letter-spacing:-.01em;line-height:1.12;
+}
+.section-head p{margin-top:20px;color:var(--ink-dim);font-size:1.08rem;max-width:640px;line-height:1.6;}
+.section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+.section-head.center p{margin-left:auto;margin-right:auto;}
+
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease), transform 1s var(--ease);}
+.reveal.in{opacity:1;transform:none;}
+.reveal-stagger > *{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+.reveal-stagger.in > *{opacity:1;transform:none;}
+.reveal-stagger.in > *:nth-child(1){transition-delay:.05s;}
+.reveal-stagger.in > *:nth-child(2){transition-delay:.15s;}
+.reveal-stagger.in > *:nth-child(3){transition-delay:.25s;}
+.reveal-stagger.in > *:nth-child(4){transition-delay:.35s;}
+.reveal-stagger.in > *:nth-child(5){transition-delay:.45s;}
+
+.divider{height:1px;background:var(--line);width:100%;margin:40px 0;}
+
+/* ---------- 02 ЧТО ТАКОЕ STATUS ---------- */
+.about-banner{
+  background:radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.07), rgba(255,255,255,.02) 60%), #080808;
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-l);
+  padding:64px 48px;
+  text-align:center;
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 30px 60px -20px rgba(0,0,0,.7);
+}
+.about-banner h3{
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  line-height:1.25;
+  max-width:860px;
+  margin:0 auto;
+}
+
+/* ---------- 03 КАК РАБОТАЕТ STATUS ---------- */
+.how-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.how-steps{display:flex;flex-direction:column;gap:24px;}
+.how-step-card{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+  border-radius:var(--radius-m);
+  padding:28px 32px;
+  transition:background .4s var(--ease), border-color .4s var(--ease), transform .4s var(--ease);
+}
+.how-step-card:hover{
+  background:rgba(255,255,255,.05);
+  border-color:var(--line-strong);
+  transform:translateX(6px);
+}
+.how-num{font-family:var(--serif);font-size:13px;color:var(--ink-dim);letter-spacing:.08em;margin-bottom:8px;display:block;}
+.how-step-card h3{font-size:1.2rem;font-weight:500;margin-bottom:8px;}
+.how-step-card p{color:var(--ink-dim);font-size:.95rem;line-height:1.5;}
+
+.swipe-stack{position:relative;height:540px;display:flex;align-items:center;justify-content:center;perspective:1200px;}
+.swipe-card{
+  position:absolute;width:230px;aspect-ratio:375/812;border-radius:26px;
+  transform-origin:50% 100%;
+  background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+  border:1px solid var(--line-strong);
+  backdrop-filter:blur(20px);
+  box-shadow:0 1px 0 rgba(255,255,255,.1) inset, 0 40px 80px -30px rgba(0,0,0,.8);
+  overflow:hidden;
+  backface-visibility:hidden;
+  will-change:transform,opacity;
+}
+.swipe-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.swipe-card.front{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:1;z-index:3;}
+.swipe-card.back-1{transform:translate3d(0,-28px,0) scale(.94) rotate(-4deg);opacity:.55;z-index:2;}
+.swipe-card.back-2{transform:translate3d(0,-50px,0) scale(.88) rotate(5deg);opacity:.3;z-index:1;}
+
+/* ---------- 04 ПОЧЕМУ STATUS ---------- */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.why-card{
+  background:#080808;
+  border:1px solid var(--line);
+  border-radius:var(--radius-l);
+  padding:44px 40px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-height:280px;
+  transition:border-color .4s var(--ease), transform .4s var(--ease);
+}
+.why-card:hover{border-color:var(--line-strong);transform:translateY(-4px);}
+.why-card-num{font-family:var(--serif);font-size:14px;color:var(--ink-dim);margin-bottom:20px;display:block;}
+.why-card h3{font-family:var(--serif);font-weight:400;font-size:1.5rem;margin-bottom:14px;}
+.why-card p{color:var(--ink-dim);font-size:.98rem;line-height:1.6;}
+
+/* ---------- 05 КТО ВНУТРИ STATUS ---------- */
+.roles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:1040px;margin:0 auto;}
+.role-card{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--line);
+  border-radius:var(--radius-m);
+  padding:34px 28px;
+  transition:border-color .4s var(--ease), transform .4s var(--ease), background .4s var(--ease);
+}
+.role-card.role-full{
+  grid-column:1 / -1;
+}
+.role-card:hover{
+  background:rgba(255,255,255,.045);
+  border-color:var(--line-strong);
+  transform:translateY(-4px);
+}
+.role-icon{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;color:#fff;
+}
+.role-icon svg{width:22px;height:22px;display:block;}
+.role-card h4{font-size:1.15rem;font-weight:500;margin-bottom:10px;}
+.role-card p{color:var(--ink-dim);font-size:.92rem;line-height:1.55;}
+
+/* ---------- 06 КАЧЕСТВО СЕТИ ---------- */
+.verify-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.verify-card{
+  border:1px solid var(--line);border-radius:var(--radius-m);padding:32px 26px;
+  background:#070707;
+  transition:border-color .4s var(--ease), transform .4s var(--ease);
+}
+.verify-card:hover{border-color:var(--line-strong);transform:translateY(-4px);}
+.verify-card .mark{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:14px;
+}
+.verify-card h4{font-size:1.05rem;font-weight:500;margin-bottom:8px;}
+.verify-card p{color:var(--ink-dim);font-size:.9rem;line-height:1.55;}
+
+/* ---------- 07 ВОЗМОЖНОСТИ STATUS ---------- */
+.features-tags{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:1040px;margin:0 auto 48px;
+}
+.feature-tag-pill{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line-strong);
+  border-radius:100px;
+  padding:10px 20px;
+  font-size:13.5px;
+  color:var(--ink);
+  display:inline-flex;align-items:center;gap:8px;
+  transition:background .3s var(--ease), transform .3s var(--ease);
+}
+.feature-tag-pill:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+.feature-tag-pill::before{content:'●';font-size:8px;color:rgba(255,255,255,.6);}
+
+.intro-video-section{padding:0 0 50px;}
+.horizontal-video-frame{
+  position:relative;
+  max-width:1100px;margin:0 auto;
+  aspect-ratio:16/9;
+  border-radius:var(--radius-l);
+  overflow:hidden;
+  border:1px solid var(--line-strong);
+  background:#060606;
+  box-shadow:0 1px 0 rgba(255,255,255,.1) inset, 0 60px 100px -40px rgba(0,0,0,.85);
+}
+.horizontal-video{width:100%;height:100%;object-fit:cover;display:block;}
+
+.pain-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+  margin-top:40px;
+}
+.pain-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(140% 120% at 100% 100%, rgba(255,255,255,.05), rgba(255,255,255,.012) 55%),
+    #080808;
+  padding:40px 38px;
+  min-height:380px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  transition:border-color .5s var(--ease), transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.pain-card:hover{
+  border-color:var(--line-strong);
+  transform:translateY(-6px);
+  box-shadow:0 40px 70px -40px rgba(0,0,0,.7);
+}
+.pain-card::before{
+  content:attr(data-num);
+  position:absolute;top:28px;right:34px;
+  font-family:var(--serif);font-weight:400;
+  font-size:56px;line-height:1;
+  color:rgba(255,255,255,.05);
+  z-index:0;pointer-events:none;
+  transition:color .5s var(--ease);
+}
+.pain-card:hover::before{color:rgba(255,255,255,.09);}
+.pain-card-body{position:relative;z-index:2;max-width:58%;}
+.pain-card h3{
+  font-family:var(--serif);font-weight:400;letter-spacing:-.01em;
+  font-size:clamp(1.15rem,1.6vw,1.4rem);
+  line-height:1.3;
+  margin-bottom:22px;
+}
+.pain-block{margin-bottom:18px;}
+.pain-block:last-child{margin-bottom:0;}
+.pain-label{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);}
+.pain-block.problem .pain-label{margin-bottom:7px;}
+.pain-block p{color:var(--ink-dim);font-size:.9rem;line-height:1.6;}
+.pain-solution-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.pain-solution-head .pain-label{margin-bottom:0;color:#fff;}
+.pain-mark{
+  flex:0 0 auto;width:19px;height:19px;border-radius:50%;
+  border:1px solid var(--line-strong);background:rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#fff;
+}
+.pain-block.solution p{color:var(--ink);}
+
+.pain-card-phone{
+  position:absolute;
+  right:-30px;bottom:-34px;
+  width:172px;
+  z-index:1;
+  transform:rotate(10deg);
+  transition:transform .5s var(--ease);
+  pointer-events:none;
+}
+.pain-card:hover .pain-card-phone{transform:rotate(6deg) translateY(-10px);}
+.pain-card-phone .pain-phone{
+  width:100%;max-width:none;
+  filter:drop-shadow(0 30px 50px rgba(0,0,0,.65));
+  mask-image:linear-gradient(215deg, black 45%, transparent 88%);
+  -webkit-mask-image:linear-gradient(215deg, black 45%, transparent 88%);
+}
+.pain-phone{
+  position:relative;width:100%;max-width:230px;aspect-ratio:9/18.5;
+  border-radius:32px;
+  background:linear-gradient(160deg, rgba(255,255,255,.1), rgba(255,255,255,.02) 40%, rgba(0,0,0,.4));
+  border:1px solid var(--line-strong);
+  box-shadow:0 1px 0 rgba(255,255,255,.25) inset, 0 0 0 1px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+.pain-phone img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;}
+.pain-phone .notch{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:2;
+  width:34%;height:16px;border-radius:20px;background:rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.map-panel{
+  position:relative;border-radius:var(--radius-l);border:1px solid var(--line);
+  background:#060606;overflow:hidden;min-height:460px;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:40px;
+}
+.map-panel .grid-lines{mask-image:radial-gradient(circle at 50% 50%, black, transparent 70%);}
+.map-bg-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:0;opacity:.95;
+}
+.map-video-overlay{
+  position:absolute;inset:0;z-index:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.10));
+  pointer-events:none;
+}
+.city-pin{
+  position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;
+  box-shadow:0 0 0 0 rgba(255,255,255,.5);
+  animation:pulse 3s ease-out infinite;
+}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.35);}70%{box-shadow:0 0 0 22px rgba(255,255,255,0);}100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}}
+.map-legend{
+  position:absolute;bottom:28px;left:28px;
+  padding:16px 20px;border-radius:16px;
+  background:rgba(10,10,10,.55);backdrop-filter:blur(18px);
+  border:1px solid var(--line-strong);
+  font-size:12.5px;color:var(--ink-dim);
+}
+.map-legend b{color:#fff;font-family:var(--serif);font-size:15px;display:block;font-weight:400;}
+
+/* ---------- 08 ПОДАТЬ ЗАЯВКУ (Form) ---------- */
+.apply-section{
+  max-width:800px;margin:0 auto;
+}
+.apply-card{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-l);
+  padding:48px 44px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 1px 0 rgba(255,255,255,.1) inset, 0 40px 80px -30px rgba(0,0,0,.8);
+}
+.apply-form{display:flex;flex-direction:column;gap:24px;}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-label{font-size:13px;font-weight:500;color:var(--ink);letter-spacing:.01em;}
+.form-label span{color:var(--ink-dim);font-weight:400;font-size:12px;margin-left:6px;}
+.form-input, .form-textarea{
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line-strong);
+  border-radius:12px;
+  padding:14px 18px;
+  color:#fff;
+  font-family:inherit;
+  font-size:14px;
+  transition:border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+}
+.form-input:focus, .form-textarea:focus{
+  outline:none;
+  border-color:rgba(255,255,255,.4);
+  background:rgba(255,255,255,.07);
+  box-shadow:0 0 0 3px rgba(255,255,255,.08);
+}
+.form-textarea{min-height:100px;resize:vertical;}
+
+.role-options{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
+.role-chip{
+  position:relative;
+  cursor:pointer;
+  user-select:none;
+}
+.role-chip input{position:absolute;opacity:0;pointer-events:none;}
+.role-chip-text{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:100px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line-strong);
+  font-size:13px;
+  color:var(--ink-dim);
+  transition:all .3s var(--ease);
+}
+.role-chip input:checked + .role-chip-text, .role-chip-text:hover{
+  background:#fff;color:#050505;border-color:#fff;
+}
+
+.form-submit-btn{
+  width:100%;margin-top:12px;padding:16px 32px;font-size:15px;
+}
+
+/* Modal feedback */
+.modal-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(5,5,5,.75);backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .4s var(--ease);
+}
+.modal-overlay.active{opacity:1;pointer-events:auto;}
+.modal-card{
+  background:#0a0a0a;border:1px solid var(--line-strong);
+  border-radius:var(--radius-l);padding:44px;max-width:480px;text-align:center;
+  box-shadow:0 30px 60px rgba(0,0,0,.8);
+  transform:scale(.95);transition:transform .4s var(--ease);
+}
+.modal-overlay.active .modal-card{transform:scale(1);}
+.modal-card h3{font-family:var(--serif);font-size:1.8rem;font-weight:400;margin-bottom:12px;}
+.modal-card p{color:var(--ink-dim);font-size:.98rem;margin-bottom:28px;}
+
+/* ---------- 09 FAQ ---------- */
+.faq-list{max-width:840px;margin:0 auto;}
+.faq-item{border-top:1px solid var(--line);}
+.faq-item:last-child{border-bottom:1px solid var(--line);}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:26px 0;font-size:1.08rem;font-weight:500;cursor:pointer;
+}
+.faq-q .plus{font-size:22px;color:var(--ink-dim);transition:transform .4s var(--ease);font-weight:300;}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease);}
+.faq-a p{padding-bottom:26px;color:var(--ink-dim);font-size:.96rem;line-height:1.6;max-width:760px;}
+
+/* ---------- 10 ФИНАЛЬНЫЙ CTA ---------- */
+.final-cta-card{
+  background:radial-gradient(100% 100% at 50% 0%, rgba(255,255,255,.08), transparent 80%), #080808;
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-l);
+  padding:72px 48px;
+  text-align:center;
+  max-width:960px;
+  margin:0 auto;
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 40px 80px -30px rgba(0,0,0,.8);
+}
+.final-cta-card h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.2rem,4vw,3.6rem);
+  line-height:1.15;
+  margin-bottom:20px;
+}
+.final-cta-card p{
+  color:var(--ink-dim);font-size:1.1rem;max-width:560px;margin:0 auto 36px;
+}
+
+/* ---------- 11 FOOTER ---------- */
+footer{
+  position:relative;z-index:2;
+  padding:60px 64px 40px;border-top:1px solid var(--line);
+}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:40px;}
+.footer-cta h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,3.6vw,3rem);max-width:520px;}
+.footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-bottom:48px;}
+.footer-col span{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:20px;}
+.footer-col a{display:block;font-size:.92rem;color:var(--ink-dim);margin-bottom:12px;transition:color .3s var(--ease);}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{display:flex;justify-content:space-between;color:var(--ink-dim);font-size:.82rem;border-top:1px solid var(--line);padding-top:28px;flex-wrap:wrap;gap:12px;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1024px){
+  .hero{padding:140px 32px 60px;}
+  .how-wrap{grid-template-columns:1fr;gap:40px;}
+  .why-grid{grid-template-columns:1fr;}
+  .roles-grid{grid-template-columns:repeat(2,1fr);}
+  .pain-grid{grid-template-columns:1fr;}
+  .verify-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-cols{grid-template-columns:repeat(2,1fr);}
+  .nav-links{display:none;}
+  section{padding:70px 32px;}
+}
+@media (max-width:600px){
+  header{padding:14px;}
+  .nav-glass{padding:10px 16px;}
+  .roles-grid{grid-template-columns:1fr;}
+  .role-card.role-full{grid-column:auto;}
+  .verify-grid{grid-template-columns:1fr;}
+  .footer-cols{grid-template-columns:1fr;}
+  section{padding:56px 20px;}
+  .apply-card{padding:32px 20px;}
+  .final-cta-card{padding:48px 24px;}
+  .about-banner{padding:44px 24px;}
+}
+
+/* ---------- Language gate ---------- */
+body.gate-active{overflow:hidden;}
+.lang-gate{
+  position:fixed;inset:0;z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,5,5,.5);
+  backdrop-filter:blur(28px) saturate(140%);
+  -webkit-backdrop-filter:blur(28px) saturate(140%);
+  transition:opacity .6s var(--ease), visibility .6s var(--ease);
+}
+.lang-gate.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.lang-gate-inner{
+  text-align:center;
+  padding:0 24px;
+  opacity:0;transform:translateY(14px);
+  animation:reveal .9s var(--ease) .1s forwards;
+}
+.lang-gate-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);
+  margin-bottom:32px;
+}
+.lang-gate-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.6);}
+.lang-gate-options{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+}
+.lang-gate-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:150px;
+  padding:22px 34px;
+  border-radius:var(--radius-m);
+  background:var(--glass-bg);
+  border:1px solid var(--line-strong);
+  backdrop-filter:blur(14px);
+  transition:transform .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease);
+}
+.lang-gate-btn:hover{
+  background:rgba(255,255,255,.09);
+  border-color:rgba(255,255,255,.28);
+  transform:translateY(-3px);
+}
+.lang-gate-btn .code{font-family:var(--serif);font-size:20px;font-weight:500;}
+.lang-gate-btn .label{font-size:12px;color:var(--ink-dim);letter-spacing:.02em;}
+</style>
+</head>
+<body class="gate-active">
+
+<!-- Language Selection Gate -->
+<div class="lang-gate" id="langGate">
+  <div class="lang-gate-inner">
+    <span class="lang-gate-eyebrow">STATUS</span>
+    <div class="lang-gate-options">
+      <button type="button" class="lang-gate-btn" data-lang="ru">
+        <span class="code">RU</span>
+        <span class="label">Русский</span>
+      </button>
+      <button type="button" class="lang-gate-btn" data-lang="en">
+        <span class="code">EN</span>
+        <span class="label">English</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<canvas class="grain" id="grain"></canvas>
+<div class="field"></div>
+<div class="grid-lines"></div>
+
+<!-- Header & Nav -->
+<header id="siteHeader">
+  <div class="nav-glass">
+    <div class="logo">STATUS</div>
+    <nav class="nav-links">
+      <a href="#about" data-i18n="nav_about">О нас</a>
+      <a href="#how-it-works" data-i18n="nav_how">Как работает</a>
+      <a href="#members" data-i18n="nav_members">Участники</a>
+      <a href="#features" data-i18n="nav_features">Возможности</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="#apply" class="btn btn-primary btn-sm" data-i18n="cta_apply">Подать заявку</a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 ПЕРВЫЙ ЭКРАН -->
+<section class="hero" id="hero">
+  <div class="hero-copy">
+    <span class="eyebrow" data-i18n="eyebrow">STATUS</span>
+    <h1 data-i18n-html="hero_title">Найти человека легко.<br><em>Найти нужного — сложно.</em></h1>
+    <p data-i18n="hero_sub">Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.</p>
+    <div class="hero-actions">
+      <a href="#apply" class="btn btn-primary btn-pulse" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
+    </div>
+  </div>
+</section>
+
+<!-- 02 ЧТО ТАКОЕ STATUS -->
+<section id="about">
+  <div class="about-banner reveal">
+    <span class="section-tag" data-i18n="tag_02">02 — ЧТО ТАКОЕ STATUS</span>
+    <h3 data-i18n="about_text">STATUS — закрытая профессиональная сеть, где нужные связи открывают новые возможности.</h3>
+  </div>
+</section>
+
+<!-- 03 КАК РАБОТАЕТ STATUS -->
+<section id="how-it-works">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_03">03 — КАК РАБОТАЕТ STATUS</span>
+    <h2 data-i18n="how_h2">Делает продукт понятным.</h2>
+  </div>
+  <div class="how-wrap">
+    <div class="how-steps reveal-stagger">
+      <div class="how-step-card">
+        <span class="how-num">01</span>
+        <h3 data-i18n="step1_h3">Расскажите о себе</h3>
+        <p data-i18n="step1_p">Кто вы, что можете и кого ищете.</p>
+      </div>
+      <div class="how-step-card">
+        <span class="how-num">02</span>
+        <h3 data-i18n="step2_h3">Найдите нужного человека</h3>
+        <p data-i18n="step2_p">AI-помощник помогает найти профессиональную связь под ваш запрос.</p>
+      </div>
+      <div class="how-step-card">
+        <span class="how-num">03</span>
+        <h3 data-i18n="step3_h3">Получите мэтч</h3>
+        <p data-i18n="step3_p">STATUS предлагает знакомство и соединяет вас при взаимном интересе.</p>
+      </div>
+      <div class="how-step-card">
+        <span class="how-num">04</span>
+        <h3 data-i18n="step4_h3">Общайтесь с нужными людьми</h3>
+        <p data-i18n="step4_p">Обсуждайте задачи, обменивайтесь опытом и создавайте новые возможности.</p>
+      </div>
+    </div>
+    <div class="swipe-stack reveal" id="swipeStack">
+      <div class="swipe-card back-2"><img src="3.png" alt="STATUS App"></div>
+      <div class="swipe-card back-1"><img src="2.png" alt="STATUS App"></div>
+      <div class="swipe-card front"><img src="1.png" alt="STATUS App"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 ПОЧЕМУ STATUS -->
+<section id="why-status">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_04">04 — ПОЧЕМУ STATUS</span>
+    <h2 data-i18n-html="why_h2">Мы контролируем, кто внутри.<br><em>Мы понимаем, зачем им знакомиться.</em></h2>
+  </div>
+  <div class="why-grid reveal-stagger">
+    <div class="why-card">
+      <div>
+        <span class="why-card-num">01</span>
+        <h3 data-i18n="why1_h3">Контролируем качество сети</h3>
+        <p data-i18n="why1_p">STATUS — закрытая сеть. Участники проходят отбор и верификацию, чтобы внутри были люди, которым можно доверять.</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <div>
+        <span class="why-card-num">02</span>
+        <h3 data-i18n="why2_h3">Понимаем намерение</h3>
+        <p data-i18n="why2_p">Вы рассказываете, кого ищете и зачем. STATUS учитывает ваше намерение, чтобы находить людей под конкретную профессиональную потребность.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 КТО ВНУТРИ STATUS -->
+<section id="members">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_05">05 — КТО ВНУТРИ STATUS</span>
+    <h2 data-i18n="members_h2">Разные роли. Один уровень профессионального диалога.</h2>
+  </div>
+  <div class="roles-grid reveal-stagger">
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+      </div>
+      <h4 data-i18n="role1_title">Владельцы бизнеса</h4>
+      <p data-i18n="role1_desc">Создают и развивают компании, принимают ключевые решения.</p>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+          <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-3.05 11a22.35 22.35 0 0 1-3.95 2z"></path>
+        </svg>
+      </div>
+      <h4 data-i18n="role2_title">Основатели стартапов</h4>
+      <p data-i18n="role2_desc">Создают новые продукты, проверяют идеи и строят компании.</p>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+      <h4 data-i18n="role3_title">Руководители</h4>
+      <p data-i18n="role3_desc">Управляют командами, направлениями и бизнес-процессами.</p>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="6"></circle>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+        </svg>
+      </div>
+      <h4 data-i18n="role4_title">Эксперты и профессионалы</h4>
+      <p data-i18n="role4_desc">Обладают глубокой экспертизой и подтверждённым профессиональным опытом.</p>
+    </div>
+    <div class="role-card role-full">
+      <div class="role-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12l4 6-10 12L2 9z"></path>
+          <path d="M11 3v18"></path>
+          <path d="M2 9h20"></path>
+        </svg>
+      </div>
+      <h4 data-i18n="role5_title">Инвесторы</h4>
+      <p data-i18n="role5_desc">Оценивают проекты, принимают инвестиционные решения и развивают портфель.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 КАЧЕСТВО СЕТИ -->
+<section id="network-quality">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_06">06 — КАЧЕСТВО СЕТИ</span>
+    <h2 data-i18n="quality_h2">Качество сети не должно быть случайностью</h2>
+  </div>
+  <div class="verify-grid reveal-stagger">
+    <div class="verify-card">
+      <div class="mark">✓</div>
+      <h4 data-i18n="q1_title">Отбор</h4>
+      <p data-i18n="q1_desc">Каждая заявка рассматривается вручную. Автоматического доступа в STATUS нет.</p>
+    </div>
+    <div class="verify-card">
+      <div class="mark">✓</div>
+      <h4 data-i18n="q2_title">Верификация</h4>
+      <p data-i18n="q2_desc">Перед входом в сеть информация об участнике проходит проверку.</p>
+    </div>
+    <div class="verify-card">
+      <div class="mark">✓</div>
+      <h4 data-i18n="q3_title">Профиль</h4>
+      <p data-i18n="q3_desc">Участник заполняет профессиональный профиль, чтобы было понятно, кто он, чем занимается и с каким намерением находится в STATUS.</p>
+    </div>
+    <div class="verify-card">
+      <div class="mark">✓</div>
+      <h4 data-i18n="q4_title">Репутация</h4>
+      <p data-i18n="q4_desc">Взаимодействие внутри STATUS формирует профессиональную репутацию участника.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 ВОЗМОЖНОСТИ STATUS -->
+<section id="features">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_07">07 — ВОЗМОЖНОСТИ STATUS</span>
+    <h2 data-i18n="features_h2">Все инструменты для масштабирования деловых связей</h2>
+  </div>
+
+  <div class="features-tags reveal">
+    <span class="feature-tag-pill" data-i18n="feat_1">AI-помощник</span>
+    <span class="feature-tag-pill" data-i18n="feat_2">Профессиональный профиль</span>
+    <span class="feature-tag-pill" data-i18n="feat_3">Намерения и цели — «Я ищу / Я могу»</span>
+    <span class="feature-tag-pill" data-i18n="feat_4">Форматы взаимодействия</span>
+    <span class="feature-tag-pill" data-i18n="feat_5">Лента людей и поиск</span>
+    <span class="feature-tag-pill" data-i18n="feat_6">Мэтчинг и общение</span>
+    <span class="feature-tag-pill" data-i18n="feat_7">Услуги и предложения</span>
+    <span class="feature-tag-pill" data-i18n="feat_8">Проекты, вакансии и работа</span>
+    <span class="feature-tag-pill" data-i18n="feat_9">События и встречи</span>
+    <span class="feature-tag-pill" data-i18n="feat_10">Деловые связи и приглашения</span>
+  </div>
+
+  <!-- Horizontal Video Demo -->
+  <div class="intro-video-section">
+    <div class="horizontal-video-frame reveal">
+      <video id="introVideo" class="horizontal-video" src="video-horizontal.mp4" playsinline></video>
+      <button id="introPlayBtn" style="position:absolute; inset:0; margin:auto; width:72px; height:72px; border-radius:50%; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); color:#fff; display:flex; align-items:center; justify-content:center; z-index:5; cursor:pointer;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pain Cards (Bento Showcase) -->
+  <div class="pain-grid">
+    <div class="pain-card reveal" data-num="01">
+      <div class="pain-card-body">
+        <h3 data-i18n="pain1_h3">Отсев нерелевантной аудитории и проверка экспертности</h3>
+        <div class="pain-block problem">
+          <span class="pain-label" data-i18n="pain_label_problem">Проблема</span>
+          <p data-i18n="pain1_problem">Трата времени на общение с некомпетентными людьми, новичками или теми, кто не дорожит репутацией.</p>
+        </div>
+        <div class="pain-block solution">
+          <div class="pain-solution-head">
+            <span class="pain-mark">✓</span>
+            <span class="pain-label" data-i18n="pain_label_solution">Решение</span>
+          </div>
+          <p data-i18n="pain1_solution">Закрытое сообщество с жёстким отбором. Доступ имеют только проверенные эксперты, подтвердившие свою квалификацию.</p>
+        </div>
+      </div>
+      <div class="pain-card-phone">
+        <div class="pain-phone">
+          <img src="pain-1-expert-filter.png" alt="STATUS Feature">
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pain-card reveal" data-num="02">
+      <div class="pain-card-body">
+        <h3 data-i18n="pain2_h3">Фильтрация по платёжеспособности</h3>
+        <div class="pain-block problem">
+          <span class="pain-label" data-i18n="pain_label_problem">Проблема</span>
+          <p data-i18n="pain2_problem">Появление неплатёжеспособной аудитории, не ценящей чужое время и экспертность.</p>
+        </div>
+        <div class="pain-block solution">
+          <div class="pain-solution-head">
+            <span class="pain-mark">✓</span>
+            <span class="pain-label" data-i18n="pain_label_solution">Решение</span>
+          </div>
+          <p data-i18n="pain2_solution">Клубный доступ с подтверждением платёжеспособности гарантирует высокий уровень участников.</p>
+        </div>
+      </div>
+      <div class="pain-card-phone">
+        <div class="pain-phone">
+          <img src="pain-2-pricing-model.png" alt="STATUS Feature">
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pain-card reveal" data-num="03">
+      <div class="pain-card-body">
+        <h3 data-i18n="pain3_h3">Прозрачность задач и целей</h3>
+        <div class="pain-block problem">
+          <span class="pain-label" data-i18n="pain_label_problem">Проблема</span>
+          <p data-i18n="pain3_problem">Бесполезный нетворкинг ради знакомств без понимания практической пользы и точек соприкосновения.</p>
+        </div>
+        <div class="pain-block solution">
+          <div class="pain-solution-head">
+            <span class="pain-mark">✓</span>
+            <span class="pain-label" data-i18n="pain_label_solution">Решение</span>
+          </div>
+          <p data-i18n="pain3_solution">В ленте сразу отображается текущая задача пользователя. С первого взгляда понятно, можете ли вы помочь друг другу.</p>
+        </div>
+      </div>
+      <div class="pain-card-phone">
+        <div class="pain-phone">
+          <img src="pain-3-feed-goals.png" alt="STATUS Feature">
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pain-card reveal" data-num="04">
+      <div class="pain-card-body">
+        <h3 data-i18n="pain4_h3">Понятный формат взаимодействия</h3>
+        <div class="pain-block problem">
+          <span class="pain-label" data-i18n="pain_label_problem">Проблема</span>
+          <p data-i18n="pain4_problem">Непонимание того, на каких условиях человек готов работать: деньги, партнёрство, безвозмездная помощь или инвестиции.</p>
+        </div>
+        <div class="pain-block solution">
+          <div class="pain-solution-head">
+            <span class="pain-mark">✓</span>
+            <span class="pain-label" data-i18n="pain_label_solution">Решение</span>
+          </div>
+          <p data-i18n="pain4_solution">Профили с фиксированным форматом сотрудничества: «Коммерческий», «Win-Win», «Альтруист», «Участие в проектах».</p>
+        </div>
+      </div>
+      <div class="pain-card-phone">
+        <div class="pain-phone">
+          <img src="pain-4-cooperation-format.png" alt="STATUS Feature">
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pain-card reveal" data-num="05">
+      <div class="pain-card-body">
+        <h3 data-i18n="pain5_h3">AI-ассистент для поиска и квалификации</h3>
+        <div class="pain-block problem">
+          <span class="pain-label" data-i18n="pain_label_problem">Проблема</span>
+          <p data-i18n="pain5_problem">Долгий поиск исполнителей на фрилансе, ручной мониторинг чатов и утомительная сортировка кандидатов.</p>
+        </div>
+        <div class="pain-block solution">
+          <div class="pain-solution-head">
+            <span class="pain-mark">✓</span>
+            <span class="pain-label" data-i18n="pain_label_solution">Решение</span>
+          </div>
+          <p data-i18n="pain5_solution">Прямой запрос к искусственному интеллекту, который находит нужного специалиста и открывает контакт.</p>
+        </div>
+      </div>
+      <div class="pain-card-phone">
+        <div class="pain-phone">
+          <img src="pain-5-ai-search-assistant.png" alt="STATUS Feature">
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pain-card reveal" data-num="06">
+      <div class="pain-card-body">
+        <h3 data-i18n="pain6_h3">Моментальная организация бизнес-событий</h3>
+        <div class="pain-block problem">
+          <span class="pain-label" data-i18n="pain_label_problem">Проблема</span>
+          <p data-i18n="pain6_problem">Сложные и дорогие маркетинговые воронки, настройка рекламы и сбор людей на мероприятия.</p>
+        </div>
+        <div class="pain-block solution">
+          <div class="pain-solution-head">
+            <span class="pain-mark">✓</span>
+            <span class="pain-label" data-i18n="pain_label_solution">Решение</span>
+          </div>
+          <p data-i18n="pain6_solution">Создание события за 20 секунд. Отметьте место на карте — резиденты рядом мгновенно получат приглашение.</p>
+        </div>
+      </div>
+      <div class="pain-card-phone">
+        <div class="pain-phone">
+          <img src="pain-6-instant-events.png" alt="STATUS Feature">
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Map Panel -->
+  <div class="map-panel reveal">
+    <video class="map-bg-video" src="map-video.mp4" autoplay muted loop playsinline></video>
+    <div class="map-video-overlay"></div>
+    <div class="grid-lines"></div>
+    <div class="city-pin" style="top:30%;left:18%;"></div>
+    <div class="city-pin" style="top:55%;left:42%;animation-delay:1s;"></div>
+    <div class="city-pin" style="top:38%;left:66%;animation-delay:2s;"></div>
+    <div class="city-pin" style="top:64%;left:80%;animation-delay:.5s;"></div>
+    <div class="map-legend">
+      <b>Нью-Йорк, Дубай, Сингапур</b>
+      <span>Резиденты STATUS встречаются по всему миру</span>
+    </div>
+  </div>
+</section>
+
+<!-- 08 ПОДАТЬ ЗАЯВКУ -->
+<section id="apply">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_08">08 — ПОДАТЬ ЗАЯВКУ</span>
+    <h2 data-i18n="apply_h2">Присоединяйтесь к STATUS</h2>
+    <p data-i18n="apply_p">Заполните анкету для рассмотрения вашей кандидатуры в закрытую сеть.</p>
+  </div>
+
+  <div class="apply-section reveal">
+    <div class="apply-card">
+      <form class="apply-form" id="applicationForm" onsubmit="handleFormSubmit(event)">
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_name">Имя и фамилия *</label>
+          <input type="text" class="form-input" required placeholder="Иван Иванов" id="fieldName">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_role">Ваша профессиональная роль *</label>
+          <div class="role-options">
+            <label class="role-chip">
+              <input type="radio" name="user_role" value="Владелец бизнеса" checked>
+              <span class="role-chip-text" data-i18n="role_opt1">Владелец бизнеса</span>
+            </label>
+            <label class="role-chip">
+              <input type="radio" name="user_role" value="Основатель стартапа">
+              <span class="role-chip-text" data-i18n="role_opt2">Основатель стартапа</span>
+            </label>
+            <label class="role-chip">
+              <input type="radio" name="user_role" value="Руководитель">
+              <span class="role-chip-text" data-i18n="role_opt3">Руководитель</span>
+            </label>
+            <label class="role-chip">
+              <input type="radio" name="user_role" value="Эксперт или специалист">
+              <span class="role-chip-text" data-i18n="role_opt4">Эксперт или специалист</span>
+            </label>
+            <label class="role-chip">
+              <input type="radio" name="user_role" value="Инвестор">
+              <span class="role-chip-text" data-i18n="role_opt5">Инвестор</span>
+            </label>
+            <label class="role-chip">
+              <input type="radio" name="user_role" value="Другое">
+              <span class="role-chip-text" data-i18n="role_opt6">Другое</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_company">Компания / проект <span>(Название, ваша роль, ссылка — если есть)</span></label>
+          <input type="text" class="form-input" placeholder="ООО «Компания», CEO, https://..." id="fieldCompany">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_about">Расскажите о себе * <span>(Коротко о том, чем вы занимаетесь, вашем опыте и экспертизе)</span></label>
+          <textarea class="form-textarea" required placeholder="Ваш опыт, достижения и текущее направление работы..." id="fieldAbout"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_target">С кем вам хотелось бы познакомиться сейчас? * <span>(Текущие задачи и кого было бы интересно найти)</span></label>
+          <textarea class="form-textarea" required placeholder="Сооснователь, инвестор, ключевые партнёры, клиенты..." id="fieldTarget"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_profile">Профессиональный профиль <span>(LinkedIn / сайт / другой профиль)</span></label>
+          <input type="text" class="form-input" placeholder="https://linkedin.com/in/... или сайт" id="fieldProfile">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="lbl_contacts">Контакты * <span>(Telegram / e-mail)</span></label>
+          <input type="text" class="form-input" required placeholder="@username или email@domain.com" id="fieldContacts">
+        </div>
+
+        <button type="submit" class="btn btn-primary form-submit-btn" data-i18n="cta_submit">ПОДАТЬ ЗАЯВКУ</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Modal Confirmation -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-card">
+    <h3 data-i18n="modal_h3">Заявка принята</h3>
+    <p data-i18n="modal_p">Спасибо! Наша команда свяжется с вами после верификации профиля.</p>
+    <button class="btn btn-primary" onclick="closeModal()" data-i18n="modal_btn">Отлично</button>
+  </div>
+</div>
+
+<!-- 09 FAQ -->
+<section id="faq">
+  <div class="section-head reveal center">
+    <span class="section-tag" data-i18n="tag_09">09 — FAQ</span>
+    <h2 data-i18n="faq_h2">Часто задаваемые вопросы</h2>
+  </div>
+
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq1_q">Как работает STATUS?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq1_a">STATUS — это закрытая профессиональная сеть. После подачи заявки и ручной верификации профиля вы получаете доступ к ИИ-ассистенту и ленте резидентов для поиска точных бизнес-связей.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq2_q">Как STATUS находит нужных людей?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq2_a">Алгоритмы на базе ИИ учитывают ваши текущие запросы («Я ищу / Я могу»), сферу деятельности, опыт и цели, подбирая кандидатов с наибольшей взаимной ценностью.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq3_q">Могу ли я пользоваться STATUS, если сейчас никого конкретно не ищу?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq3_a">Да. Вы можете поддерживать деловое присутствие, делиться своей экспертизой, отслеживать события и получать релевантные запросы от других участников.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq4_q">В каких странах работает STATUS?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq4_a">STATUS работает глобально. Участники сети представлены в более чем 140 странах, включая ключевые финансовые и стартап-хабы.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq5_q">Как проверяются участники STATUS?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq5_a">Каждая заявка проходит ручную модерацию. Мы проверяем подтверждённый опыт, юридический статус компаний и профессиональную репутацию.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq6_q">Гарантирует ли STATUS, что найденный человек согласится на знакомство?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq6_a">Знакомство происходит при взаимном согласии. Благодаря прозрачности целей и предложений процент успешных мэтчей превышает 85%.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq7_q">Можно ли пригласить другого человека в STATUS?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq7_a">Да, действующие участники могут рекомендовать коллегам вступить в сеть. Однако рекомендуемый кандидат также проходит стандартный этап верификации.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq8_q">Как рассматривается заявка?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq8_a">Заявка рассматривается модераторами вручную в течение 24–48 часов. При необходимости представитель клуба свяжется с вами для уточнения деталей.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq9_q">Что произойдёт после подачи заявки?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq9_a">После заполнения формы вы получите подтверждение на указанные контакты. Модераторы проверят данные и вышлют персональный ключ доступа.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span data-i18n="faq10_q">Сколько стоит участие в STATUS?</span><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq10_a">Стоимость и форматы членства высылаются персонально после прохождения первой фазы верификации анкеты.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 ФИНАЛЬНЫЙ CTA -->
+<section id="final-cta">
+  <div class="final-cta-card reveal">
+    <span class="section-tag" data-i18n="tag_10">10 — ФИНАЛЬНЫЙ CTA</span>
+    <h2 data-i18n-html="final_h2">Найти человека легко.<br><em>Найти нужного — сложно.</em></h2>
+    <p data-i18n="final_p">Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.</p>
+    <a href="#apply" class="btn btn-primary" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
+  </div>
+</section>
+
+<!-- 11 FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-cta">
+      <h2 data-i18n="footer_title">STATUS — Закрытая профессиональная сеть</h2>
+    </div>
+    <a href="#apply" class="btn btn-primary" data-i18n="cta_apply">ПОДАТЬ ЗАЯВКУ</a>
+  </div>
+  <div class="footer-cols">
+    <div class="footer-col">
+      <span data-i18n="f_col1">Продукт</span>
+      <a href="#about" data-i18n="f_c1_1">О STATUS</a>
+      <a href="#how-it-works" data-i18n="f_c1_2">Как работает</a>
+      <a href="#features" data-i18n="f_c1_3">Возможности</a>
+    </div>
+    <div class="footer-col">
+      <span data-i18n="f_col2">Сеть</span>
+      <a href="#members" data-i18n="f_c2_1">Кто внутри</a>
+      <a href="#network-quality" data-i18n="f_c2_2">Качество сети</a>
+      <a href="#apply" data-i18n="f_c2_3">Подать заявку</a>
+    </div>
+    <div class="footer-col">
+      <span data-i18n="f_col3">Инфо</span>
+      <a href="#faq" data-i18n="f_c3_1">FAQ</a>
+      <a href="https://t.me/statusinform" target="_blank">Telegram Bot</a>
+    </div>
+    <div class="footer-col">
+      <span data-i18n="f_col4">Юридическая информация</span>
+      <a href="#">Конфиденциальность</a>
+      <a href="#">Условия пользования</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2030 STATUS. Все права защищены.</span>
+    <span>Закрытая профессиональная сеть</span>
+  </div>
+</footer>
+
+<!-- JavaScript Controls -->
+<script>
+// Header scroll state
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive:true });
+
+// Reveal on scroll
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold:.15 });
+document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+
+// Vertical swipe card stack animation
+(function(){
+  const stack = document.getElementById('swipeStack');
+  if(!stack) return;
+  const images = ['1.png','2.png','3.png','4.png','5.png'];
+  images.forEach(src => { const im = new Image(); im.src = src; });
+  let nextIndex = 3;
+
+  let order = [
+    stack.querySelector('.swipe-card.front'),
+    stack.querySelector('.swipe-card.back-1'),
+    stack.querySelector('.swipe-card.back-2')
+  ];
+
+  const DUR = 900;
+  const EASE = 'cubic-bezier(.25,.75,.35,1)';
+  const ROLE = {
+    front:  { transform:'translate3d(0,0,0) scale(1) rotate(0deg)',      opacity:1   },
+    back1:  { transform:'translate3d(0,-28px,0) scale(.94) rotate(-4deg)', opacity:.55 },
+    back2:  { transform:'translate3d(0,-50px,0) scale(.88) rotate(5deg)',  opacity:.3  },
+    flyUp:  { transform:'translate3d(0,-480px,0) scale(1) rotate(0deg)', opacity:0   }
+  };
+
+  function cycle(){
+    const leaving = order[0];
+    const promotedFront = order[1];
+    const promotedBack1 = order[2];
+
+    leaving.style.zIndex = 5;
+    const leaveAnim = leaving.animate(
+      [ { transform:ROLE.front.transform, opacity:ROLE.front.opacity },
+        { transform:ROLE.flyUp.transform, opacity:ROLE.flyUp.opacity } ],
+      { duration:DUR, easing:EASE, fill:'forwards' }
+    );
+
+    const frontAnim = promotedFront.animate(
+      [ { transform:ROLE.back1.transform, opacity:ROLE.back1.opacity },
+        { transform:ROLE.front.transform, opacity:ROLE.front.opacity } ],
+      { duration:DUR, easing:EASE, fill:'forwards' }
+    );
+
+    const back1Anim = promotedBack1.animate(
+      [ { transform:ROLE.back2.transform, opacity:ROLE.back2.opacity },
+        { transform:ROLE.back1.transform, opacity:ROLE.back1.opacity } ],
+      { duration:DUR, easing:EASE, fill:'forwards' }
+    );
+
+    order = [promotedFront, promotedBack1, leaving];
+
+    frontAnim.onfinish = () => {
+      frontAnim.cancel();
+      promotedFront.classList.remove('back-1');
+      promotedFront.classList.add('front');
+    };
+    back1Anim.onfinish = () => {
+      back1Anim.cancel();
+      promotedBack1.classList.remove('back-2');
+      promotedBack1.classList.add('back-1');
+    };
+    leaveAnim.onfinish = () => {
+      const nextSrc = images[nextIndex % images.length];
+      nextIndex++;
+      const img = leaving.querySelector('img');
+      const reveal = () => {
+        leaving.style.zIndex = 1;
+        const fadeIn = leaving.animate(
+          [ { transform:ROLE.flyUp.transform, opacity:0 },
+            { transform:ROLE.back2.transform, opacity:ROLE.back2.opacity } ],
+          { duration:550, easing:'ease-out', fill:'forwards' }
+        );
+        fadeIn.onfinish = () => {
+          fadeIn.cancel();
+          leaveAnim.cancel();
+          leaving.style.zIndex = '';
+          leaving.classList.remove('front');
+          leaving.classList.add('back-2');
+        };
+      };
+      if (img && img.getAttribute('src') !== nextSrc) {
+        const pre = new Image();
+        pre.src = nextSrc;
+        const swap = () => { img.src = nextSrc; reveal(); };
+        if (pre.decode) { pre.decode().then(swap).catch(swap); }
+        else { swap(); }
+      } else {
+        reveal();
+      }
+    };
+    setTimeout(cycle, 3400);
+  }
+  setTimeout(cycle, 3400);
+})();
+
+// Horizontal video play button
+const introV = document.getElementById('introVideo');
+const introB = document.getElementById('introPlayBtn');
+if (introV && introB) {
+  introV.volume = 1;
+  introB.addEventListener('click', () => {
+    introV.play();
+    introV.controls = true;
+    introB.style.display = 'none';
+  });
+  introV.addEventListener('ended', () => {
+    introV.controls = false;
+    introV.currentTime = 0;
+    introB.style.display = 'flex';
+  });
+}
+
+// FAQ Accordion
+document.querySelectorAll('.faq-item').forEach(item => {
+  const q = item.querySelector('.faq-q');
+  const a = item.querySelector('.faq-a');
+  q.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o => {
+      o.classList.remove('open');
+      o.querySelector('.faq-a').style.maxHeight = null;
+    });
+    if(!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+  });
+});
+
+// Canvas grain
+const canvas = document.getElementById('grain');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+function drawGrain(){
+  const w = canvas.width, h = canvas.height;
+  const imgData = ctx.createImageData(w,h);
+  const buffer = new Uint32Array(imgData.data.buffer);
+  for(let i=0;i<buffer.length;i++){
+    const v = (Math.random()*255)|0;
+    buffer[i] = (255<<24) | (v<<16) | (v<<8) | v;
+  }
+  ctx.putImageData(imgData,0,0);
+}
+let frame=0;
+function animateGrain(){
+  frame++;
+  if(frame % 3 === 0) drawGrain();
+  requestAnimationFrame(animateGrain);
+}
+animateGrain();
+
+// Application Form Logic
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.classList.add('active');
+  document.getElementById('applicationForm').reset();
+}
+
+function closeModal() {
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.classList.remove('active');
+}
+
+// Bilingual i18n Dictionary
+const i18n = {
+  "page_title": {
+    "ru": "STATUS — Закрытая профессиональная сеть",
+    "en": "STATUS — Private Professional Network"
+  },
+  "nav_about": { "ru": "О нас", "en": "About" },
+  "nav_how": { "ru": "Как работает", "en": "How it works" },
+  "nav_members": { "ru": "Участники", "en": "Members" },
+  "nav_features": { "ru": "Возможности", "en": "Features" },
+  "nav_faq": { "ru": "FAQ", "en": "FAQ" },
+  "cta_apply": { "ru": "ПОДАТЬ ЗАЯВКУ", "en": "APPLY NOW" },
+  "eyebrow": { "ru": "STATUS", "en": "STATUS" },
+  "hero_title": {
+    "ru": "Найти человека легко.<br><em>Найти нужного — сложно.</em>",
+    "en": "Finding anyone is easy.<br><em>Finding the right one is hard.</em>"
+  },
+  "hero_sub": {
+    "ru": "Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.",
+    "en": "Tell us who you are and who you're looking for. STATUS finds the exact match you need to connect with."
+  },
+  "tag_02": { "ru": "02 — ЧТО ТАКОЕ STATUS", "en": "02 — WHAT IS STATUS" },
+  "about_text": {
+    "ru": "STATUS — закрытая профессиональная сеть, где нужные связи открывают новые возможности.",
+    "en": "STATUS is an invite-only professional network where high-value connections unlock new opportunities."
+  },
+  "tag_03": { "ru": "03 — КАК РАБОТАЕТ STATUS", "en": "03 — HOW STATUS WORKS" },
+  "how_h2": { "ru": "Делает продукт понятным.", "en": "Making the product clear and effortless." },
+  "step1_h3": { "ru": "01. Расскажите о себе", "en": "01. Tell us about yourself" },
+  "step1_p": { "ru": "Кто вы, что можете и кого ищете.", "en": "Who you are, what you offer, and who you're looking for." },
+  "step2_h3": { "ru": "02. Найдите нужного человека", "en": "02. Find the right match" },
+  "step2_p": { "ru": "AI-помощник помогает найти профессиональную связь под ваш запрос.", "en": "Our AI assistant surfaces precise connections tailored to your request." },
+  "step3_h3": { "ru": "03. Получите мэтч", "en": "03. Get matched" },
+  "step3_p": { "ru": "STATUS предлагает знакомство и соединяет вас при взаимном интересе.", "en": "STATUS introduces both parties once mutual interest is confirmed." },
+  "step4_h3": { "ru": "04. Общайтесь с нужными людьми", "en": "04. Engage with high-value contacts" },
+  "step4_p": { "ru": "Обсуждайте задачи, обменивайтесь опытом и создавайте новые возможности.", "en": "Discuss challenges, exchange insights, and unlock new ventures." },
+  "tag_04": { "ru": "04 — ПОЧЕМУ STATUS", "en": "04 — WHY STATUS" },
+  "why_h2": {
+    "ru": "Мы контролируем, кто внутри.<br><em>Мы понимаем, зачем им знакомиться.</em>",
+    "en": "We control who's inside.<br><em>We understand why they meet.</em>"
+  },
+  "why1_h3": { "ru": "Контролируем качество сети", "en": "We enforce network quality" },
+  "why1_p": { "ru": "STATUS — закрытая сеть. Участники проходят отбор и верификацию, чтобы внутри были люди, которым можно доверять.", "en": "STATUS is an invite-only network. All members undergo rigorous screening so you connect only with trusted peers." },
+  "why2_h3": { "ru": "Понимаем намерение", "en": "We decode intent" },
+  "why2_p": { "ru": "Вы рассказываете, кого ищете и зачем. STATUS учитывает ваше намерение, чтобы находить людей под конкретную профессиональную потребность.", "en": "You specify who and why. STATUS factors in your precise intent to match specific business needs." },
+  "tag_05": { "ru": "05 — КТО ВНУТРИ STATUS", "en": "05 — WHO IS INSIDE STATUS" },
+  "members_h2": { "ru": "Разные роли. Один уровень профессионального диалога.", "en": "Diverse roles. One tier of professional dialogue." },
+  "role1_title": { "ru": "Владельцы бизнеса", "en": "Business Owners" },
+  "role1_desc": { "ru": "Создают и развивают компании, принимают ключевые решения.", "en": "Build and scale companies, drive key strategic decisions." },
+  "role2_title": { "ru": "Основатели стартапов", "en": "Startup Founders" },
+  "role2_desc": { "ru": "Создают новые продукты, проверяют идеи и строят компании.", "en": "Ship new products, test hypotheses, and build ventures." },
+  "role3_title": { "ru": "Руководители", "en": "Executives & Leaders" },
+  "role3_desc": { "ru": "Управляют командами, направлениями и бизнес-процессами.", "en": "Manage teams, divisions, and core business operations." },
+  "role4_title": { "ru": "Эксперты и профессионалы", "en": "Experts & Professionals" },
+  "role4_desc": { "ru": "Обладают глубокой экспертизой и подтверждённым профессиональным опытом.", "en": "Possess deep industry expertise and verified track records." },
+  "role5_title": { "ru": "Инвесторы", "en": "Investors" },
+  "role5_desc": { "ru": "Оценивают проекты, принимают инвестиционные решения и развивают портфель.", "en": "Evaluate deals, execute investments, and back portfolio companies." },
+  "tag_06": { "ru": "06 — КАЧЕСТВО СЕТИ", "en": "06 — NETWORK QUALITY" },
+  "quality_h2": { "ru": "Качество сети не должно быть случайностью", "en": "Network quality is never left to chance" },
+  "q1_title": { "ru": "Отбор", "en": "Vetting" },
+  "q1_desc": { "ru": "Каждая заявка рассматривается вручную. Автоматического доступа в STATUS нет.", "en": "Every application is reviewed manually. No automated signups." },
+  "q2_title": { "ru": "Верификация", "en": "Verification" },
+  "q2_desc": { "ru": "Перед входом в сеть информация об участнике проходит проверку.", "en": "Member background and credentials are fully verified prior to entry." },
+  "q3_title": { "ru": "Профиль", "en": "Profile" },
+  "q3_desc": { "ru": "Участник заполняет профессиональный профиль, чтобы было понятно, кто он, чем занимается и с каким намерением находится в STATUS.", "en": "Detailed professional profiles clarify who everyone is and their exact goals." },
+  "q4_title": { "ru": "Репутация", "en": "Reputation" },
+  "q4_desc": { "ru": "Взаимодействие внутри STATUS формирует профессиональную репутацию участника.", "en": "Interactions inside STATUS build and maintain member reputation." },
+  "tag_07": { "ru": "07 — ВОЗМОЖНОСТИ STATUS", "en": "07 — STATUS FEATURES" },
+  "features_h2": { "ru": "Все инструменты для масштабирования деловых связей", "en": "Full suite of tools for business networking" },
+  "feat_1": { "ru": "AI-помощник", "en": "AI Assistant" },
+  "feat_2": { "ru": "Профессиональный профиль", "en": "Professional Profile" },
+  "feat_3": { "ru": "Намерения и цели — «Я ищу / Я могу»", "en": "Intentions & Goals — 'Looking for / Offering'" },
+  "feat_4": { "ru": "Форматы взаимодействия", "en": "Collaboration Formats" },
+  "feat_5": { "ru": "Лента людей и поиск", "en": "People Feed & Search" },
+  "feat_6": { "ru": "Мэтчинг и общение", "en": "Matching & Messaging" },
+  "feat_7": { "ru": "Услуги и предложения", "en": "Services & Offers" },
+  "feat_8": { "ru": "Проекты, вакансии и работа", "en": "Projects & Opportunities" },
+  "feat_9": { "ru": "События и встречи", "en": "Events & Meetups" },
+  "feat_10": { "ru": "Деловые связи и приглашения", "en": "Connections & Invites" },
+  "tag_08": { "ru": "08 — ПОДАТЬ ЗАЯВКУ", "en": "08 — APPLY NOW" },
+  "apply_h2": { "ru": "Присоединяйтесь к STATUS", "en": "Apply for STATUS Membership" },
+  "apply_p": { "ru": "Заполните анкету для рассмотрения вашей кандидатуры в закрытую сеть.", "en": "Complete the form for review by our membership committee." },
+  "lbl_name": { "ru": "Имя и фамилия *", "en": "Full Name *" },
+  "lbl_role": { "ru": "Ваша профессиональная роль *", "en": "Your Professional Role *" },
+  "role_opt1": { "ru": "Владелец бизнеса", "en": "Business Owner" },
+  "role_opt2": { "ru": "Основатель стартапа", "en": "Startup Founder" },
+  "role_opt3": { "ru": "Руководитель", "en": "Executive" },
+  "role_opt4": { "ru": "Эксперт или специалист", "en": "Expert / Specialist" },
+  "role_opt5": { "ru": "Инвестор", "en": "Investor" },
+  "role_opt6": { "ru": "Другое", "en": "Other" },
+  "lbl_company": { "ru": "Компания / проект", "en": "Company / Project" },
+  "lbl_about": { "ru": "Расскажите о себе *", "en": "About Yourself *" },
+  "lbl_target": { "ru": "С кем вам хотелось бы познакомиться сейчас? *", "en": "Who are you looking to meet right now? *" },
+  "lbl_profile": { "ru": "Профессиональный профиль", "en": "Professional Profile Link" },
+  "lbl_contacts": { "ru": "Контакты *", "en": "Contacts (Telegram / Email) *" },
+  "cta_submit": { "ru": "ПОДАТЬ ЗАЯВКУ", "en": "SUBMIT APPLICATION" },
+  "modal_h3": { "ru": "Заявка принята", "en": "Application Submitted" },
+  "modal_p": { "ru": "Спасибо! Наша команда свяжется с вами после верификации профиля.", "en": "Thank you! Our team will contact you following verification." },
+  "modal_btn": { "ru": "Отлично", "en": "Got it" },
+  "tag_09": { "ru": "09 — FAQ", "en": "09 — FAQ" },
+  "faq_h2": { "ru": "Часто задаваемые вопросы", "en": "Frequently Asked Questions" },
+  "faq1_q": { "ru": "Как работает STATUS?", "en": "How does STATUS work?" },
+  "faq1_a": { "ru": "STATUS — это закрытая профессиональная сеть. После подачи заявки и ручной верификации профиля вы получаете доступ к ИИ-ассистенту и ленте резидентов для поиска точных бизнес-связей.", "en": "STATUS is an invite-only professional network. Once your application passes manual verification, you gain access to our AI assistant and member feed for high-precision business networking." },
+  "faq2_q": { "ru": "Как STATUS находит нужных людей?", "en": "How does STATUS find the right matches?" },
+  "faq2_a": { "ru": "Алгоритмы на базе ИИ учитывают ваши текущие запросы («Я ищу / Я могу»), сферу деятельности, опыт и цели, подбирая кандидатов с наибольшей взаимной ценностью.", "en": "Our AI analyzes your active requests, industry background, and intentions ('Looking for / Offering') to deliver matches with maximum mutual value." },
+  "faq3_q": { "ru": "Могу ли я пользоваться STATUS, если сейчас никого конкретно не ищу?", "en": "Can I use STATUS if I'm not actively searching?" },
+  "faq3_a": { "ru": "Да. Вы можете поддерживать деловое присутствие, делиться своей экспертизой, отслеживать события и получать релевантные запросы от других участников.", "en": "Yes. You can maintain your professional profile, share expertise, monitor events, and receive relevant incoming requests." },
+  "faq4_q": { "ru": "В каких странах работает STATUS?", "en": "In which countries does STATUS operate?" },
+  "faq4_a": { "ru": "STATUS работает глобально. Участники сети представлены в более чем 140 странах, включая ключевые финансовые и стартап-хабы.", "en": "STATUS operates worldwide. Members are located across 140+ countries in major financial and innovation hubs." },
+  "faq5_q": { "ru": "Как проверяются участники STATUS?", "en": "How are members verified?" },
+  "faq5_a": { "ru": "Каждая заявка проходит ручную модерацию. Мы проверяем подтверждённый опыт, юридический статус компаний и профессиональную репутацию.", "en": "Every application undergoes manual moderation. We check career history, company registration, and industry reputation." },
+  "faq6_q": { "ru": "Гарантирует ли STATUS, что найденный человек согласится на знакомство?", "en": "Does STATUS guarantee a match will accept an intro?" },
+  "faq6_a": { "ru": "Знакомство происходит при взаимном согласии. Благодаря прозрачности целей и предложений процент успешных мэтчей превышает 85%.", "en": "Introductions occur upon mutual consent. Thanks to goal clarity, our successful introduction rate exceeds 85%." },
+  "faq7_q": { "ru": "Можно ли пригласить другого человека в STATUS?", "en": "Can I invite someone else to STATUS?" },
+  "faq7_a": { "ru": "Да, действующие участники могут рекомендовать коллегам вступить в сеть. Однако рекомендуемый кандидат также проходит стандартный этап верификации.", "en": "Yes, active members can invite trusted peers. However, all invited candidates must still pass our standard verification." },
+  "faq8_q": { "ru": "Как рассматривается заявка?", "en": "How is an application evaluated?" },
+  "faq8_a": { "ru": "Заявка рассматривается модераторами вручную в течение 24–48 часов. При необходимости представитель клуба свяжется с вами для уточнения деталей.", "en": "Applications are reviewed manually within 24–48 hours. A membership representative may contact you if details are needed." },
+  "faq9_q": { "ru": "Что произойдёт после подачи заявки?", "en": "What happens after submitting an application?" },
+  "faq9_a": { "ru": "После заполнения формы вы получите подтверждение на указанные контакты. Модераторы проверят данные и вышлют персональный ключ доступа.", "en": "You will receive a confirmation on your submitted contact details. Following verification, an invite key will be issued." },
+  "faq10_q": { "ru": "Сколько стоит участие в STATUS?", "en": "How much does STATUS membership cost?" },
+  "faq10_a": { "ru": "Стоимость и форматы членства высылаются персонально после прохождения первой фазы верификации анкеты.", "en": "Pricing and membership tiers are provided individually following the initial application verification phase." },
+  "tag_10": { "ru": "10 — ФИНАЛЬНЫЙ CTA", "en": "10 — FINAL CTA" },
+  "final_h2": {
+    "ru": "Найти человека легко.<br><em>Найти нужного — сложно.</em>",
+    "en": "Finding anyone is easy.<br><em>Finding the right one is hard.</em>"
+  },
+  "final_p": {
+    "ru": "Расскажите, кто вы и кого вы ищете. STATUS найдёт человека, с которым вам стоит познакомиться.",
+    "en": "Tell us who you are and who you're looking for. STATUS finds the exact match you need to connect with."
+  },
+  "footer_title": { "ru": "STATUS — Закрытая профессиональная сеть", "en": "STATUS — Private Professional Network" }
+};
+
+function applyLanguage(lang) {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[key] && i18n[key][lang] !== undefined) {
+      el.textContent = i18n[key][lang];
+    }
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (i18n[key] && i18n[key][lang] !== undefined) {
+      el.innerHTML = i18n[key][lang];
+    }
+  });
+  const titleEl = document.getElementById('pageTitle');
+  if (titleEl && i18n['page_title']) {
+    titleEl.textContent = i18n['page_title'][lang];
+    document.title = i18n['page_title'][lang];
+  }
+  const htmlRoot = document.getElementById('htmlRoot');
+  if (htmlRoot) htmlRoot.setAttribute('lang', lang);
+}
+
+function getLangFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const l = params.get('lang');
+  return (l === 'ru' || l === 'en') ? l : null;
+}
+
+function setLangInUrl(lang) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('lang', lang);
+  window.history.replaceState({}, '', url);
+}
+
+const langGate = document.getElementById('langGate');
+const urlLang = getLangFromUrl();
+
+if (urlLang) {
+  applyLanguage(urlLang);
+  if (langGate) {
+    langGate.classList.add('hidden');
+    document.body.classList.remove('gate-active');
+  }
+} else if (langGate) {
+  langGate.querySelectorAll('.lang-gate-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.getAttribute('data-lang');
+      applyLanguage(lang);
+      setLangInUrl(lang);
+      langGate.classList.add('hidden');
+      document.body.classList.remove('gate-active');
+    });
+  });
+}
+</script>
+</body>
+</html>
